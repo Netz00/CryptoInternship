@@ -25,6 +25,7 @@ class Game extends React.Component {
       return;
     }
 
+
     this.state.history.map( x => ( x.fillBtn=false) );
     
     squares[i]=this.state.xIsNext ? 'X' : 'O';
@@ -42,6 +43,10 @@ class Game extends React.Component {
   }
 
   jumpTo(step){
+
+    this.state.history[step].fillBtn=true;
+    this.state.history[this.state.stepNumber].fillBtn=false;
+
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2) === 0,
@@ -66,19 +71,17 @@ class Game extends React.Component {
     let status;
     let fillBtn=Array(9).fill(false);
     if (winner) {
-      status = 'Winner: ' + winner;
-
+      status = 'Winner: ' + (this.state.xIsNext ? 'O':'X');
       winner.forEach(element => {
         fillBtn[element]=true;
       });
     
-
-    } else {
+    }else if(this.state.stepNumber===9){
+      status = 'Draw';
+    }else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-
-       
-    this.state.history.map( x => (fillBtn[x.buttonNum]= x.fillBtn) );
-    //console.log(fillBtn);
+      this.state.history.map( x => (fillBtn[x.buttonNum]= x.fillBtn) );
+      //console.log(fillBtn);
     }
 
   
@@ -114,24 +117,18 @@ class Board extends React.Component {
   }
 
   render() {
+    let boardSquares = [];
+    for(let row = 0; row < 3; row++){
+      let boardRow = [];
+      for(let col = 0; col < 3; col++){
+        boardRow.push(<span key={(row * 3) + col}>{this.renderSquare((row * 3) + col)}</span>);
+      }
+      boardSquares.push(<div className="board-row" key={row}>{boardRow}</div>);
+    }
 
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {boardSquares}
       </div>
     );
   }
