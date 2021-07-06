@@ -44,12 +44,15 @@ class Game extends React.Component {
 
   jumpTo(step){
 
-    this.state.history[step].fillBtn=true;
-    this.state.history[this.state.stepNumber].fillBtn=false;
+    const history = this.state.history.slice(0, this.state.history.length);
+
+    history[step].fillBtn=true;
+    history[this.state.stepNumber].fillBtn=false;
 
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2) === 0,
+      history:history,
     });
   }
   
