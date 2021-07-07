@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Cookies from 'universal-cookie';
 
 function Copyright() {
   return (
@@ -58,22 +59,54 @@ export default function SignIn() {
  
   const [formData, updateFormData] = React.useState(initialFormData);
 
-  const handleChange = (e) => {
-    updateFormData({
-      ...formData,
 
-      // Trimming any whitespace
-      [e.target.name]: e.target.value.trim()
-    });
+
+
+  const handleChange = (e) => {
+    if(e.target.type!=="checkbox")
+      updateFormData({
+        ...formData,
+        // Trimming any whitespace
+        [e.target.name]: e.target.value.trim()
+      });
+    else
+      updateFormData({
+        ...formData,
+        // Trimming any whitespace
+        [e.target.name]: e.target.checked
+      });
   };
+
 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     console.log(formData);
-    // ... submit to API or something
-  };
+    //check username
 
+    //check password hash
+    //formData.password.trim()
+   
+    //both are correct, then
+    //IF formData.rememberMe == TRUE => MAKE COOKIE, otherwise just redirrect user to dasboard with temporary "session"
+
+    //create cookie
+
+    //store cookie
+
+    const cookies = new Cookies();
+
+//cookie set selector and validator, exp date is serverSide
+   
+      cookies.set("email", formData.email.trim(), { path: '/' });
+   
+
+   
+    console.log(cookies.get('email'));
+
+    //redirect user to / where cookie will be inspected, and if valid redirect him to homepage
+  };
+  
 
   return (
     <Container component="main" maxWidth="xs">
@@ -111,7 +144,7 @@ export default function SignIn() {
             onChange={handleChange}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={<Checkbox name="rememberMe" onChange={handleChange} color="primary" />}
             label="Remember me"
           />
           <Button
