@@ -84,10 +84,10 @@ class Application extends React.Component {
               <Switch>
 
                 <Route exact path="/">
-                {inpectCookie() ? <Redirect to="/dashboard" /> : <SignIn />}
+                {inpectCookie() ? <Redirect to="/Dashboard" /> : <SignIn />}
                 </Route>
                         
-                <Route path="/dashboard">
+                <Route path="/Dashboard">
                   <Dashboard />
                 </Route>
 
