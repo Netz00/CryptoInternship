@@ -5,32 +5,18 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Cookies from 'universal-cookie';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        ScamTrade
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 const initialFormData = Object.freeze({
-  email: "",
-  password: "",
+  address: "",
   rememberMe: false,
+  addressValid:true,
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -45,13 +31,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '80%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
 }));
+
+const ethereum_address = require('ethereum-address');
 
 export default function SignIn() {
   const classes = useStyles();
@@ -67,8 +55,10 @@ export default function SignIn() {
       updateFormData({
         ...formData,
         // Trimming any whitespace
-        [e.target.name]: e.target.value.trim()
+        [e.target.name]: e.target.value.trim(),
+        ["addressValid"]: ethereum_address.isAddress(e.target.value.trim()),
       });
+    
     else
       updateFormData({
         ...formData,
@@ -80,36 +70,33 @@ export default function SignIn() {
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    console.log(formData);
-    //check username
-
-    //check password hash
-    //formData.password.trim()
+    e.preventDefault();
+    
+    //update values once again would be nice
+     
+    if(ethereum_address.isAddress(formData.address))
+    {
+      const cookies = new Cookies();
+      if(formData.rememberMe){
+        console.log("login s cookiem");
+        
+        cookies.set("address", formData.address.trim(), { path: '/' });
+        //obicni request na /
+      }
+      else{
+        console.log("login bez cookiem");
+        cookies.remove("address");
+        //post request na / sa adresom u podacima POSTa
+      }
+    }
    
-    //both are correct, then
-    //IF formData.rememberMe == TRUE => MAKE COOKIE, otherwise just redirrect user to dasboard with temporary "session"
-
-    //create cookie
-
-    //store cookie
-
-    const cookies = new Cookies();
-
-//cookie set selector and validator, exp date is serverSide
-   
-      cookies.set("email", formData.email.trim(), { path: '/' });
-   
-
-   
-    console.log(cookies.get('email'));
 
     //redirect user to / where cookie will be inspected, and if valid redirect him to homepage
   };
   
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="sm">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -120,28 +107,20 @@ export default function SignIn() {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
+            backgroundColor="transparent"
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
+            name="address"
+            label="Etherium address"
+            type="text"
+            id="address"
+            autoComplete="current-address"
             onChange={handleChange}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={handleChange}
+            error={!formData.addressValid}
+            helperText={!formData.addressValid ? 'Invalid etherium address.' : ''}
+
           />
           <FormControlLabel
             control={<Checkbox name="rememberMe" onChange={handleChange} color="primary" />}
@@ -156,23 +135,8 @@ export default function SignIn() {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
