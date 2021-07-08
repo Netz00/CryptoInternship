@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundcolor: theme.palette.secondary.main,
   },
   form: {
     width: '80%', // Fix IE 11 issue.
@@ -44,36 +44,34 @@ const ethereum_address = require('ethereum-address');
 export default function SignIn() {
   const classes = useStyles();
 
- 
   const [formData, updateFormData] = React.useState(initialFormData);
 
+ 
+  
 
+  const handleChangeText = (e) => {
 
+      const newMessageObj = { 
+        address:e.target.value.trim(),
+        addressValid: ethereum_address.isAddress(e.target.value.trim()) 
+      };
+      updateFormData(newMessageObj); 
 
-  const handleChange = (e) => {
-    if(e.target.type!=="checkbox")
-      updateFormData({
-        ...formData,
-        // Trimming any whitespace
-        [e.target.name]: e.target.value.trim(),
-        ["addressValid"]: ethereum_address.isAddress(e.target.value.trim()),
-      });
-    
-    else
-      updateFormData({
-        ...formData,
-        // Trimming any whitespace
-        [e.target.name]: e.target.checked
-      });
-  };
+    };
 
-
+  const handleChangeSwitchButton = (e) => {
+    updateFormData({
+      ...formData,
+      [e.target.name]: e.target.checked
+    });
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     
-    //update values once again would be nice
-     
+    
+    //updating values once again would be nice
+    console.log(formData);
+
     if(ethereum_address.isAddress(formData.address))
     {
       const cookies = new Cookies();
@@ -88,8 +86,9 @@ export default function SignIn() {
         cookies.remove("address");
         //post request na / sa adresom u podacima POSTa
       }
+    }else{
+         e.preventDefault();
     }
-   
 
     //redirect user to / where cookie will be inspected, and if valid redirect him to homepage
   };
@@ -107,7 +106,7 @@ export default function SignIn() {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
-            backgroundColor="transparent"
+            backgroundcolor="transparent"
             variant="outlined"
             margin="normal"
             required
@@ -117,13 +116,12 @@ export default function SignIn() {
             type="text"
             id="address"
             autoComplete="current-address"
-            onChange={handleChange}
+            onChange={handleChangeText}
             error={!formData.addressValid}
             helperText={!formData.addressValid ? 'Invalid etherium address.' : ''}
-
           />
           <FormControlLabel
-            control={<Checkbox name="rememberMe" onChange={handleChange} color="primary" />}
+            control={<Checkbox name="rememberMe" onChange={handleChangeSwitchButton} value="yes" color="primary" />}
             label="Remember me"
           />
           <Button

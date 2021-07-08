@@ -1,13 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SignIn from './SignIn';
+import Dashboard from './Dashboard';
 import './index.css';
 
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet';
+import Cookies from 'universal-cookie';
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+
+
 
 const TITLE = 'ScamTrade';
 
@@ -35,31 +46,61 @@ function Copyright() {
   );
 }
 
+ const ethereum_address = require('ethereum-address');
+
+ function inpectCookie(){
+    const cookies = new Cookies();
+    if( ethereum_address.isAddress( cookies.get('address'))){
+       return true;
+    }
+    else{
+      cookies.remove("address");
+      return false;
+    }
+  }
+
 class Application extends React.Component {
 
-    handleLogin(adr){
+ 
 
-        
-    }
     render () {
       return (
-          <div className="application">
+        <React.StrictMode>
+          <Router>
+
+            <div className="application">
+
               <Helmet>
-                  <title>{ TITLE }</title>
-                  <style>{'html, body{min-height:100%;} body {  height:100vh;   background: #4DA0B0;  /* fallback for old browsers */background: -webkit-linear-gradient(to bottom, #D39D38, #4DA0B0);  /* Chrome 10-25, Safari 5.1-6 */background: linear-gradient(to bottom, #D39D38, #4DA0B0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }; height=100%'}</style>
+                <title>{ TITLE }</title>
+                <style>{'html, body{min-height:100%;} body {  height:100vh;   background: #4DA0B0;  /* fallback for old browsers */background: -webkit-linear-gradient(to bottom, #D39D38, #4DA0B0);  /* Chrome 10-25, Safari 5.1-6 */background: linear-gradient(to bottom, #D39D38, #4DA0B0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }; height=100%'}</style>
               </Helmet>
-              <SignIn 
-              onSuccessfullLogin={(adr) => this.handleLogin(adr)}
-              />
-                <Box mt={8}>
-        <Copyright />
-      </Box>
-          </div>
+
+              <Box mt={8}>
+                <Copyright />
+              </Box>
+
+
+
+              <Switch>
+
+                <Route exact path="/">
+                {inpectCookie() ? <Redirect to="/dashboard" /> : <SignIn />}
+                </Route>
+                        
+                <Route path="/dashboard">
+                  <Dashboard />
+                </Route>
+
+              </Switch>
+            </div>
+          </Router>
+          </React.StrictMode>
       );
     }
   };
 
+const rootElement = document.getElementById("root");
 ReactDOM.render(
-    <Application />,
-    document.getElementById('root')
-  );
+      <Application />,
+  rootElement
+);
