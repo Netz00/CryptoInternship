@@ -1,4 +1,3 @@
-import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,7 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Cookies from 'universal-cookie';
 
-
+import  PropTypes  from 'prop-types';
+import { useState } from 'react';
 
 const initialFormData = Object.freeze({
   address: "",
@@ -41,10 +41,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ethereum_address = require('ethereum-address');
 
-export default function SignIn() {
-  const classes = useStyles();
 
-  const [formData, updateFormData] = React.useState(initialFormData);
+
+const Login = ({onLoginSuccess}) => {
+
+    const classes = useStyles();
+
+  const [formData, updateFormData] = useState(initialFormData);
 
  
   
@@ -75,6 +78,9 @@ export default function SignIn() {
     if(ethereum_address.isAddress(formData.address))
     {
       const cookies = new Cookies();
+      
+    onLoginSuccess(formData.address);
+    
       if(formData.rememberMe){
         console.log("login s cookiem");
         
@@ -92,7 +98,8 @@ export default function SignIn() {
 
     //redirect user to / where cookie will be inspected, and if valid redirect him to homepage
   };
-  
+
+
 
   return (
     <Container component="main" maxWidth="sm">
@@ -104,7 +111,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} onSubmit={handleSubmit}>
+        <form className={classes.form} action="/Dashboard" onSubmit={handleSubmit}>
           <TextField
             backgroundcolor="transparent"
             variant="outlined"
@@ -136,5 +143,11 @@ export default function SignIn() {
         </form>
       </div>
     </Container>
-  );
+  )
 }
+
+Login.propTypes = {
+    onLoginSuccess: PropTypes.func.isRequired,
+}
+
+export default Login
