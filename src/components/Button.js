@@ -6,7 +6,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     btn: {
-      margin: theme.spacing(30, 0, 2),
+      margin: theme.spacing(3, 0, 2),
+      position:"relative",
     },
   }));
 

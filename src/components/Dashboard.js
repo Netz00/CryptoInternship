@@ -58,38 +58,27 @@ const Dashboard = ({address, AddrHistory,history}) => {
            history.push("/"); 
         };
 
-      /*    
- const url_string = window.location.href;
-  
-    const url_object = new URL(url_string);
-    const address = url_object.searchParams.get("address");
+        const handleExplore = (e) => {
+           history.push("/Explore"); 
+        };
+        const handleMint = (e) => {
+       };
+       const handleTransfer = (e) => {
+     };
 
-  const cookies = new Cookies();
-  const ethereum_address = require('ethereum-address');
-
- 
-
-  function inpectLogin(){
-    if( ethereum_address.isAddress(address)){
-       return true;
-    }
-    else{
-      return true;
-    }
-  }
-
-*/
-const onClick = () => {
-    console.log("click");
-}
     return (
         <Container component="main" maxWidth="sm">
       <CssBaseline />
       {!inpectLogin() ? <Redirect to="/" /> : ''}
       <div className={classes.paper}>
 
+   <ButtonHomemade text="Explore" onClick={handleExplore}/>
+      <ButtonHomemade text="Mint" onClick={handleMint}/>
+      <ButtonHomemade text="Transfer" onClick={handleTransfer}/>
+
+
   <form className={classes.form} onSubmit={handleSubmit}>
-      <ButtonHomemade text="button" onClick={onClick}/>
+   
           <Button
             type="submit"
             fullWidth

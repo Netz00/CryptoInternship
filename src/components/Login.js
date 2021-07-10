@@ -1,7 +1,6 @@
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -9,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Cookies from 'universal-cookie';
-
+import AddressInput from './AddressInput';
 
 import  PropTypes  from 'prop-types';
 import { useState } from 'react';
@@ -22,7 +21,6 @@ import {
 const initialFormData = Object.freeze({
   address: "",
   rememberMe: false,
-  addressValid:true,
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -55,17 +53,12 @@ const Login = ({onLoginSuccess,history}) => {
 
   const [formData, updateFormData] = useState(initialFormData);
 
- 
-  
-
-  const handleChangeText = async (e) => {
-
+    const handleChangeText = async (e) => {
       const newMessageObj = { 
         address:e.target.value.trim(),
-        addressValid: ethereum_address.isAddress(e.target.value.trim()) 
       };
       updateFormData(newMessageObj); 
-
+      console.log(e.target.value.trim());
     };
 
   const handleChangeSwitchButton = async (e) => {
@@ -79,9 +72,13 @@ const Login = ({onLoginSuccess,history}) => {
     
     //updating values once again would be nice
     e.preventDefault();//u slucaju refreshanja stranice gubimo sve podatke
+  console.log(ethereum_address.isAddress(formData.address.trim()));
+  console.log(formData.address.trim());
 
     if(ethereum_address.isAddress(formData.address.trim()))
     {
+    
+
       const cookies = new Cookies();
 
       if(formData.rememberMe){
@@ -123,21 +120,9 @@ const Login = ({onLoginSuccess,history}) => {
           Sign in
         </Typography>
         <form className={classes.form} action="/Dashboard" onSubmit={handleSubmit}>
-          <TextField
-            backgroundcolor="transparent"
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="address"
-            label="Etherium address"
-            type="text"
-            id="address"
-            autoComplete="current-address"
-            onChange={handleChangeText}
-            error={!formData.addressValid}
-            helperText={!formData.addressValid ? 'Invalid etherium address.' : ''}
-          />
+         
+          <AddressInput onTextChange={handleChangeText}/>
+
           <FormControlLabel
             control={<Checkbox name="rememberMe" onChange={handleChangeSwitchButton} value="yes" color="primary" />}
             label="Remember me"

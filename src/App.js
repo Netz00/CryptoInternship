@@ -1,6 +1,7 @@
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Copyright from './components/Copyright';
+import Explore from './components/Explore';
 
 import './index.css';
 
@@ -57,9 +58,7 @@ if(!ethereum_address.isAddress(address)){
   {
     address="";
     cookies.remove("address");
-
   }
-  
 }
 
 
@@ -83,7 +82,7 @@ const onLoginSuccess = (addr) => {
         ADD_Address([...AddrHistory,{ 
           address:addr,
           createdAt:new Date().getTime(),
-          balance:0,
+          balance:100,
           transactions:[{
             to:"",
             howMany:0,
@@ -109,6 +108,12 @@ const onLoginSuccess = (addr) => {
                 <Route path="/Dashboard">
                 <Dashboard address={address} AddrHistory={AddrHistory}/>
                 </Route>
+
+
+                <Route path="/Explore">
+                <Explore address={address} AddrHistory={AddrHistory}/>
+                </Route>
+
 
               </Switch>
 
