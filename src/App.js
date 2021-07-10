@@ -19,25 +19,9 @@ import {
 
  const ethereum_address = require('ethereum-address');
 
- function inpectCookie(){
-    const cookies = new Cookies();
-    if( ethereum_address.isAddress( cookies.get('address'))){
-       return true;
-    }
-    else{
-      cookies.remove("address");
-      return false;
-    }
-  }
-
-
-
-const App=()=> {
-
-
-  const [ALLaddresses, ADD_Address]=useState([
-    {
-      address:"",
+ const initialFormData = Object.freeze([
+   {
+  address:"",
       createdAt:"",
       balance:0,
       transactions:[{
@@ -45,8 +29,17 @@ const App=()=> {
         howMany:0,
         when:"",
       }],
-    },
-  ]);
+    }
+    ]);
+
+    const initialUser = Object.freeze("");
+
+
+const App=({address})=> {
+
+  const [AddrHistory, ADD_Address] = useState(initialFormData);
+  const [CurrentUser, SetUSer] = useState(initialUser);
+
 //ADD_Address([...ALLaddresses,{ NEW ADDRESS }])
 /*{
   ALLaddresses.map((address,move)=>(
@@ -54,41 +47,67 @@ const App=()=> {
                                     ))
   }
 */
+address=CurrentUser;
 
-//after successful login add new address if it doesnt exist
-const onLoginSuccess = (addr) => {
-  var addressExists=false;
+if(!ethereum_address.isAddress(address)){
+  const cookies = new Cookies();
+  if(ethereum_address.isAddress(cookies.get('address')))
+    address = cookies.get('address');
+  else
+  {
+    address="";
+    cookies.remove("address");
 
-  ALLaddresses.map((address,move)=>{
-    if(address.address===addr)
-      addressExists=true;
-    return null;
-  })
-if(!addressExists)
-  ADD_Address([...ALLaddresses,{ 
-    address:addr,
-    createdAt:new Date().getTime(),
-    balance:0,
-    transactions:[{
-      to:"",
-      howMany:0,
-      when:"",
-    }],
-  }]);
+  }
+  
 }
+
+
+
+//after successful login add new address if it doesn't exist
+const onLoginSuccess = (addr) => {
+      address = addr;
+      console.log("APP"+address);
+      var addressExists=false;
+
+      SetUSer(addr);
+
+
+      AddrHistory.map(element => {
+        if(element.address===addr)
+          addressExists=true;
+        return null;
+      });
+
+      if(!addressExists)
+        ADD_Address([...AddrHistory,{ 
+          address:addr,
+          createdAt:new Date().getTime(),
+          balance:0,
+          transactions:[{
+            to:"",
+            howMany:0,
+            when:"",
+          }],
+        }]);       
+   
+};
 
       return (
           <Router>
             <div className="App">
               
+
+            {address!=="" ? <Redirect to="/Dashboard" /> : <Redirect to="/" />}
+
               <Switch>
 
                 <Route exact path="/">
-                {inpectCookie() ? <Redirect to="/Dashboard" /> : <Login loginCallback={(adr) => onLoginSuccess(adr)} />}
+                 <Login onLoginSuccess={onLoginSuccess} />
                 </Route>
                         
                 <Route path="/Dashboard">
-                  <Dashboard address="0xd10a56a2d84e1f223d6a5289146ded8b649b1377" ALLaddresses={ALLaddresses}/>
+                <Dashboard address={address} AddrHistory={AddrHistory}/>
                 </Route>
 
               </Switch>

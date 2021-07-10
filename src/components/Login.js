@@ -10,8 +10,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Cookies from 'universal-cookie';
 
+
 import  PropTypes  from 'prop-types';
 import { useState } from 'react';
+
+import {
+  withRouter,
+} from "react-router-dom";
+
 
 const initialFormData = Object.freeze({
   address: "",
@@ -43,7 +49,7 @@ const ethereum_address = require('ethereum-address');
 
 
 
-const Login = ({onLoginSuccess}) => {
+const Login = ({onLoginSuccess,history}) => {
 
     const classes = useStyles();
 
@@ -52,7 +58,7 @@ const Login = ({onLoginSuccess}) => {
  
   
 
-  const handleChangeText = (e) => {
+  const handleChangeText = async (e) => {
 
       const newMessageObj = { 
         address:e.target.value.trim(),
@@ -62,25 +68,22 @@ const Login = ({onLoginSuccess}) => {
 
     };
 
-  const handleChangeSwitchButton = (e) => {
+  const handleChangeSwitchButton = async (e) => {
     updateFormData({
       ...formData,
       [e.target.name]: e.target.checked
     });
   }
 
-  const handleSubmit = async (e) => {
-    
+  const handleSubmit =  (e) => {
     
     //updating values once again would be nice
-    console.log(formData);
+    e.preventDefault();//u slucaju refreshanja stranice gubimo sve podatke
 
-    if(ethereum_address.isAddress(formData.address))
+    if(ethereum_address.isAddress(formData.address.trim()))
     {
       const cookies = new Cookies();
-      
-    onLoginSuccess(formData.address);
-    
+
       if(formData.rememberMe){
         console.log("login s cookiem");
         
@@ -92,6 +95,14 @@ const Login = ({onLoginSuccess}) => {
         cookies.remove("address");
         //post request na / sa adresom u podacima POSTa
       }
+
+        onLoginSuccess(formData.address);
+
+     
+        history.push("/Dashboard"); 
+      
+
+
     }else{
          e.preventDefault();
     }
@@ -150,4 +161,4 @@ Login.propTypes = {
     onLoginSuccess: PropTypes.func.isRequired,
 }
 
-export default Login
+export default withRouter(Login)

@@ -8,8 +8,14 @@ import {
   import CssBaseline from '@material-ui/core/CssBaseline';
   import { makeStyles } from '@material-ui/core/styles';
   import Container from '@material-ui/core/Container';
+  import Cookies from 'universal-cookie';
 
   import ButtonHomemade from './Button';
+
+  import {
+    withRouter,
+  } from "react-router-dom";
+  
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -32,20 +38,27 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const Dashboard = ({address, ALLaddresses}) => {
+const Dashboard = ({address, AddrHistory,history}) => {
 
      const classes = useStyles();
-     const handleSubmit = (e) => {
-     };
+     const cookies = new Cookies();
+
      function inpectLogin(){
          return true;
      }
-   /*   
+     console.log("adresa: "+address);
+     console.log(AddrHistory);
+
+    
 
 
         const handleSubmit = (e) => {
+          e.preventDefault();
            cookies.remove("address");
+           history.push("/"); 
         };
+
+      /*    
  const url_string = window.location.href;
   
     const url_object = new URL(url_string);
@@ -99,4 +112,4 @@ Dashboard.propTypes = {
     address: PropTypes.string.isRequired,
 }
 
-export default Dashboard
+export default withRouter(Dashboard)
