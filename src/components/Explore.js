@@ -23,23 +23,7 @@ const Explore = ({address, AddrHistory,history}) => {
 
     const handleChangeText = async (e) => {
 
-             /*   var newMessageObj = formData;
-                //address:e.target.value.trim(),
-
-                AddrHistory.map((element,i) => {
-                    if(element.address===e.target.value.trim())
-                        newMessageObj=element;
-                    return true;
-                });
-
-            updateFormData(newMessageObj); 
-                    //console.log(e.target.value.trim());
-*/
-
-
-var num=0;
-                //address:e.target.value.trim(),
-
+                var num=0;
                 AddrHistory.map((element,i) => {
                     if(element.address===e.target.value.trim())
                     num=i;

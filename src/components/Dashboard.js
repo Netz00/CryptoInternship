@@ -9,13 +9,14 @@ import {
   import { makeStyles } from '@material-ui/core/styles';
   import Container from '@material-ui/core/Container';
   import Cookies from 'universal-cookie';
-
+  import NumericInput from './NumericInput';
   import ButtonHomemade from './Button';
 
   import {
     withRouter,
   } from "react-router-dom";
-  
+  import Modal from 'react-modal';
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,10 +36,39 @@ const useStyles = makeStyles((theme) => ({
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      width: 'fit-content',
+    },
   }));
 
+ // Modal.setAppElement('main');
+ Modal.setAppElement(document.getElementById('body2'));
 
-const Dashboard = ({address, AddrHistory,history}) => {
+const Dashboard = ({address, AddrHistory,history,handleMint}) => {
+
+  let subtitle;
+
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = '#f00';
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
 
      const classes = useStyles();
      const cookies = new Cookies();
@@ -61,19 +91,82 @@ const Dashboard = ({address, AddrHistory,history}) => {
         const handleExplore = (e) => {
            history.push("/Explore"); 
         };
-        const handleMint = (e) => {
+
+     
+        const handleMintSubmit = (e) => {
+          e.preventDefault();
+          handleMint(e.target.elements.NumericInput.value);
        };
        const handleTransfer = (e) => {
      };
 
     return (
-        <Container component="main" maxWidth="sm">
+        <Container id="body2"  component="main" maxWidth="sm">
       <CssBaseline />
       {!inpectLogin() ? <Redirect to="/" /> : ''}
       <div className={classes.paper}>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <h>ADDRESS: {address}</h>
+      <h>BALANCE: {AddrHistory.map(
+        target=>{
+          if(target.address===address)
+              return target.balance;
+          return '';
+        }
+      )}</h>
+
+      <ButtonHomemade text="Mint" onClick={openModal} />
+
+      <div >
+      <Modal
+      sytle={{backgroundcolor:'green'}}
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={classes.content}
+        contentLabel="Mint"
+      >
+        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Mint</h2>
+        <button onClick={closeModal}>close</button>
+        <form onSubmit={handleMintSubmit}>
+
+            <NumericInput 
+              id="NumericInput"
+            />
+          <button>Mint</button>
+        </form>
+      </Modal>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
    <ButtonHomemade text="Explore" onClick={handleExplore}/>
-      <ButtonHomemade text="Mint" onClick={handleMint}/>
       <ButtonHomemade text="Transfer" onClick={handleTransfer}/>
 
 

@@ -61,7 +61,15 @@ if(!ethereum_address.isAddress(address)){
   }
 }
 
-
+const handleMint=(bal)=>{
+  console.log(CurrentUser+": "+bal);
+  const tempHistory=AddrHistory.map(element => {
+    if(element.address===address)
+      element.balance=bal;
+    return element;
+  });
+    ADD_Address(tempHistory);  
+}
 
 //after successful login add new address if it doesn't exist
 const onLoginSuccess = (addr) => {
@@ -106,7 +114,7 @@ const onLoginSuccess = (addr) => {
                 </Route>
                         
                 <Route path="/Dashboard">
-                <Dashboard address={address} AddrHistory={AddrHistory}/>
+                <Dashboard address={address} AddrHistory={AddrHistory} handleMint={handleMint}/>
                 </Route>
 
 
