@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ButtonHomemade from './Button';
 
 
-const ModalMint = ({handleMint}) => {
+const ModalMint = ({Address,handleMint}) => {
     let subtitle;
     const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -41,6 +41,7 @@ const ModalMint = ({handleMint}) => {
           appElement={document.getElementById("body2")}
         >
           <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Mint</h2>
+          <p>Current balance: {Address.balance}</p>
           <button onClick={closeModal}>close</button>
           <form onSubmit={handleMintSubmit}>
             <NumericInput />

@@ -90,9 +90,9 @@ const Dashboard = ({
         })}
 
 
-        <ModalTransfer handleSubmit={handleTransfer}/>
+        <ModalTransfer Address={Address} handleSubmit={handleTransfer}/>
 
-        <ModalMint handleMint={handleMint}/>
+        <ModalMint Address={Address} handleMint={handleMint}/>
 
 
         <ButtonHomemade text="Explore" onClick={handleExplore} />

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import AddressInput from './AddressInput';
 
 
-const ModalTransfer = ({handleSubmit}) => {
+const ModalTransfer = ({Address, handleSubmit}) => {
 
     let subtitle;
 
@@ -34,7 +34,7 @@ const ModalTransfer = ({handleSubmit}) => {
       if(!handleSubmit(address,bal))
       updateErrorMsg("Insufficient balance.");
       else
-      updateErrorMsg("");
+      updateErrorMsg("Success");
 
     };
   
@@ -54,11 +54,12 @@ const ModalTransfer = ({handleSubmit}) => {
 
                 >
                 <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Mint</h2>
+                <p>Current balance: {Address.balance}</p>
                 <button onClick={closeModal}>close</button>
                 <form onSubmit={onSumbit}>
                     <p id="errorMsg">{errorMsg}</p>
-                    <NumericInput />
                     <AddressInput />
+                    <NumericInput />
                     <button>Transfer</button>
                 </form>
                 </ModalWeb>

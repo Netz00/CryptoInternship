@@ -134,7 +134,7 @@ const App = () => {
     const tempHistory = AddrHistory.map((element) => {
       if (element.address === CurrentUser.address && element.balance >= bal) {
         success = true;
-        element.balance -= bal;
+        element.balance -= bal*1;
         element.transactions = [
           ...element.transactions,
           {
@@ -184,7 +184,7 @@ const App = () => {
       } else {
         const tempHistory2 = AddrHistory.map((element) => {
           if (element.address === to) {
-            element.balance += bal;
+            element.balance += bal*1;
             element.transactionsIn = [
               ...element.transactionsIn,
               {
