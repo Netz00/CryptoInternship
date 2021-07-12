@@ -9,9 +9,8 @@ const ModalTransfer = ({handleSubmit}) => {
 
     let subtitle;
 
-
     const [modalIsOpen, setIsOpen] = useState(false);
-    const [formData, updateFormData] = useState("");
+    const [errorMsg, updateErrorMsg] = useState("");
 
     function openModal() {
       setIsOpen(true);
@@ -26,13 +25,17 @@ const ModalTransfer = ({handleSubmit}) => {
       setIsOpen(false);
     }
 
-    const handleChangeText = async (e) => {
-      updateFormData(e.target.value.trim()); 
-    };
+    
 
     const onSumbit =  (e) => {
       e.preventDefault();
-      handleSubmit(formData,e.target.elements.NumericInput.value);
+      const address = e.target.elements.address.value.trim();
+      const bal=e.target.elements.NumericInput.value.trim();
+      if(!handleSubmit(address,bal))
+      updateErrorMsg("Insufficient balance.");
+      else
+      updateErrorMsg("");
+
     };
   
 
@@ -53,11 +56,9 @@ const ModalTransfer = ({handleSubmit}) => {
                 <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Mint</h2>
                 <button onClick={closeModal}>close</button>
                 <form onSubmit={onSumbit}>
-
-                    <NumericInput 
-                        id="NumericInput"
-                    />
-                    <AddressInput onTextChange={handleChangeText}/>
+                    <p id="errorMsg">{errorMsg}</p>
+                    <NumericInput />
+                    <AddressInput />
                     <button>Transfer</button>
                 </form>
                 </ModalWeb>

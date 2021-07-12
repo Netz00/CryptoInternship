@@ -1,41 +1,32 @@
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Cookies from 'universal-cookie';
-import AddressInput from './AddressInput';
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import Cookies from "universal-cookie";
+import AddressInput from "./AddressInput";
 
-import  PropTypes  from 'prop-types';
-import { useState } from 'react';
+import PropTypes from "prop-types";
 
-import {
-  withRouter,
-} from "react-router-dom";
-
-
-const initialFormData = Object.freeze({
-  address: "",
-  rememberMe: false,
-});
+import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundcolor: theme.palette.secondary.main,
   },
   form: {
-    width: '80%', // Fix IE 11 issue.
+    width: "80%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -43,73 +34,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ethereum_address = require('ethereum-address');
+const ethereum_address = require("ethereum-address");
 
+const Login = ({ onLoginSuccess, history }) => {
+  const classes = useStyles();
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-const Login = ({onLoginSuccess,history}) => {
+    const address = e.target.elements.address.value.trim();
+    const rememberMe = e.target.elements.rememberMe.checked;
 
-    const classes = useStyles();
-
-  const [formData, updateFormData] = useState(initialFormData);
-
-    const handleChangeText = async (e) => {
-      const newMessageObj = { 
-        address:e.target.value.trim(),
-      };
-      updateFormData(newMessageObj); 
-      console.log(e.target.value.trim());
-    };
-
-  const handleChangeSwitchButton = async (e) => {
-    updateFormData({
-      ...formData,
-      [e.target.name]: e.target.checked
-    });
-  }
-
-  const handleSubmit =  (e) => {
-    
-    //updating values once again would be nice
-  e.preventDefault();//u slucaju refreshanja stranice gubimo sve podatke
-  console.log(ethereum_address.isAddress(formData.address.trim()));
-  console.log(formData.address.trim());
-
-    if(ethereum_address.isAddress(formData.address.trim()))
-    {
-    
-
+    if (ethereum_address.isAddress(address)) {
       const cookies = new Cookies();
-      onLoginSuccess(formData.address);
+      onLoginSuccess(address);
 
-
-
-      if(formData.rememberMe){
+      if (rememberMe) {
         console.log("login s cookiem");
-        
-        cookies.set("address", formData.address.trim(), { path: '/' });
+
+        cookies.set("address", address, { path: "/" });
         //obicni request na /
-      }
-      else{
+      } else {
         console.log("login bez cookiem");
         cookies.remove("address");
         //post request na / sa adresom u podacima POSTa
       }
 
-
-     
-        history.push("/Dashboard"); 
-      
-
-
-    }else{
-         e.preventDefault();
+      history.push("/Dashboard");
+    } else {
+      e.preventDefault();
     }
 
     //redirect user to / where cookie will be inspected, and if valid redirect him to homepage
   };
-
-
 
   return (
     <Container component="main" maxWidth="sm">
@@ -121,12 +78,22 @@ const Login = ({onLoginSuccess,history}) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} action="/Dashboard" onSubmit={handleSubmit}>
-         
-          <AddressInput onTextChange={handleChangeText}/>
+        <form
+          className={classes.form}
+          action="/Dashboard"
+          onSubmit={handleSubmit}
+        >
+          <AddressInput />
 
           <FormControlLabel
-            control={<Checkbox name="rememberMe" onChange={handleChangeSwitchButton} value="yes" color="primary" />}
+            control={
+              <Checkbox
+                name="rememberMe"
+                id="rememberMe"
+                value="yes"
+                color="primary"
+              />
+            }
             label="Remember me"
           />
           <Button
@@ -141,11 +108,11 @@ const Login = ({onLoginSuccess,history}) => {
         </form>
       </div>
     </Container>
-  )
-}
+  );
+};
 
 Login.propTypes = {
-    onLoginSuccess: PropTypes.func.isRequired,
-}
+  onLoginSuccess: PropTypes.func.isRequired,
+};
 
-export default withRouter(Login)
+export default withRouter(Login);

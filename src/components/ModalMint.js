@@ -43,7 +43,7 @@ const ModalMint = ({handleMint}) => {
           <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Mint</h2>
           <button onClick={closeModal}>close</button>
           <form onSubmit={handleMintSubmit}>
-            <NumericInput id="NumericInput" />
+            <NumericInput />
             <button>Mint</button>
           </form>
         </Modal>

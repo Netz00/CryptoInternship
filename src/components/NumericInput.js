@@ -1,10 +1,11 @@
 import NumericInputweb from 'react-numeric-input';
 
-const NumericInput = ({id}) => {
+const NumericInput = ({onChange}) => {
     return (
         
               <NumericInputweb 
-              id={id}
+              id="NumericInput"
+              name="NumericInput"
               className="form-control" 
               value={ 0 } 
               min={ 0 } 
@@ -15,6 +16,7 @@ const NumericInput = ({id}) => {
               size={ 8 }  
               required
               strict
+              onChange={onChange}
             />
         
     )

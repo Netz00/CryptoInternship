@@ -55,16 +55,6 @@ const Dashboard = ({
   console.log("adresa: " + Address.address);
   console.log(AddrHistory);
 
-  var i = 0;
-  AddrHistory.map((target, move) => {
-    if (target.address === Address.address) i = move;
-    return "";
-  });
-
-  const thisUser = AddrHistory[i];
-
-
-
   const handleLogoutSubmit = (e) => {
     e.preventDefault();
     cookies.remove("address");
@@ -76,13 +66,6 @@ const Dashboard = ({
   };
 
 
-
-
-
-  const handleTransfer2 = (adr,bal) => {
-    handleTransfer(adr,bal);
-  };
-
   return (
     <Container id="body2" component="main" maxWidth="sm">
       <CssBaseline />
@@ -91,10 +74,10 @@ const Dashboard = ({
       <div className={classes.paper}>
 
         <p key="addr">ADDRESS: {Address.address}</p>
-        <p key="bal">BALANCE: {thisUser.balance}</p>
-        <p key="date">CREATED AT: {new Date(thisUser.createdAt).toUTCString()}</p>
+        <p key="bal">BALANCE: {Address.balance}</p>
+        <p key="date">CREATED AT: {new Date(Address.createdAt).toUTCString()}</p>
         <p key="transac">TRANSACTIONS:</p>
-        {thisUser.transactions.map((transaction,move) => {
+        {Address.transactions.map((transaction,move) => {
           return (
             <p key={move}>
               TO ADDRESS: {transaction.to}
@@ -107,7 +90,7 @@ const Dashboard = ({
         })}
 
 
-        <ModalTransfer handleSubmit={handleTransfer2}/>
+        <ModalTransfer handleSubmit={handleTransfer}/>
 
         <ModalMint handleMint={handleMint}/>
 

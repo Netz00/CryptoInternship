@@ -111,7 +111,7 @@ const App = () => {
   const handleMint = (bal) => {
     const tempHistory = AddrHistory.map((element) => {
       if (element.address === CurrentUser.address) {
-        element.balance = +bal;
+        element.balance += bal * 1;
         element.transactions = [
           ...element.transactions,
           {
@@ -174,7 +174,7 @@ const App = () => {
             ],
             transactionsIn: [
               {
-                from: CurrentUser.address.address,
+                from: CurrentUser.address,
                 howMany: bal,
                 when: new Date().getTime(),
               },
@@ -244,6 +244,43 @@ const App = () => {
     SetUSer(user);
   };
 
+  const newAddress = (addr) => {
+    var addressExists = false;
+    var user;
+    AddrHistory.map((target, move) => {
+      if (target.address === addr) {
+        addressExists = true;
+        user = target;
+      }
+      return null;
+    });
+
+    if (!addressExists) {
+      user = {
+        address: addr,
+        createdAt: new Date().getTime(),
+        balance: 0,
+        transactions: [
+          {
+            to: "",
+            howMany: 0,
+            when: "",
+          },
+        ],
+        transactionsIn: [
+          {
+            from: "",
+            howMany: 0,
+            when: "",
+          },
+        ],
+      };
+      console.log("add user");
+      ADD_Address([...AddrHistory, user]);
+    }
+    return user;
+  };
+
   return (
     <Router>
       <div className="App">
@@ -268,7 +305,11 @@ const App = () => {
           </Route>
 
           <Route path="/Explore">
-            <Explore Address={CurrentUser} AddrHistory={AddrHistory} />
+            <Explore
+              newAddress={newAddress}
+              Address={CurrentUser}
+              AddrHistory={AddrHistory}
+            />
           </Route>
         </Switch>
 
