@@ -41,34 +41,76 @@ const initialFormData = Object.freeze([
   },
 ]);
 
-//stores the "pointer" to current user in blockchain
-const initialUser = Object.freeze(0);
+//stores the information about current user
+const initialUser = Object.freeze({
+  address: "",
+  createdAt: "",
+  balance: 0,
+  transactions: [
+    {
+      to: "",
+      howMany: 0,
+      when: "",
+    },
+  ],
+  transactionsIn: [
+    {
+      from: "",
+      howMany: 0,
+      when: "",
+    },
+  ],
+});
 
-const App = ({ Address }) => {
+const App = () => {
   const [AddrHistory, ADD_Address] = useState(initialFormData);
   const [CurrentUser, SetUSer] = useState(initialUser);
 
-  Address = AddrHistory[CurrentUser];
-  if (CurrentUser !== 0)
-    if (!ethereum_address.isAddress(Address.address)) {
-      const cookies = new Cookies();
-      const addr = cookies.get("address");
-      if (ethereum_address.isAddress(addr)) {
-        let i = 0;
-        AddrHistory.map((target, move) => {
-          if (target.address === addr) i = move;
-          return "";
-        });
-        Address = AddrHistory[i];
-      } else {
-        Address = AddrHistory[0];
-        cookies.remove("address");
-      }
-    }
+  //cookies logic...
+  if (!ethereum_address.isAddress(CurrentUser.address)) {
+    const cookies = new Cookies();
+    const addr = cookies.get("address");
+    if (ethereum_address.isAddress(addr)) {
+      let addressExists = false;
+      AddrHistory.map((target, move) => {
+        if (target.address === addr) addressExists = true;
+        return "";
+      });
 
+      const user = {
+        address: addr,
+        createdAt: new Date().getTime(),
+        balance: 0,
+        transactions: [
+          {
+            to: "",
+            howMany: 0,
+            when: "",
+          },
+        ],
+        transactionsIn: [
+          {
+            from: "",
+            howMany: 0,
+            when: "",
+          },
+        ],
+      };
+
+      if (!addressExists) {
+        //add address if it exists only in cookie, refresh deletes local storage
+        ADD_Address([...AddrHistory, user]);
+      }
+      SetUSer(user);
+    } else {
+      cookies.remove("address");
+    }
+  }
+
+  //minting
   const handleMint = (bal) => {
     const tempHistory = AddrHistory.map((element) => {
-      if (element.address === Address.address) {
+      if (element.address === CurrentUser.address) {
         element.balance = +bal;
         element.transactions = [
           ...element.transactions,
@@ -79,17 +121,18 @@ const App = ({ Address }) => {
           },
         ];
       }
-      console.log(CurrentUser + ": " + bal);
+      console.log(CurrentUser.address + ": " + bal);
 
       return element;
     });
     ADD_Address(tempHistory);
   };
 
+  //transfer funds
   const handleTransfer = (to, bal) => {
     let success = false;
     const tempHistory = AddrHistory.map((element) => {
-      if (element.address === Address.address && element.balance >= bal) {
+      if (element.address === CurrentUser.address && element.balance >= bal) {
         success = true;
         element.balance -= bal;
         element.transactions = [
@@ -131,7 +174,7 @@ const App = ({ Address }) => {
             ],
             transactionsIn: [
               {
-                from: Address.address,
+                from: CurrentUser.address.address,
                 howMany: bal,
                 when: new Date().getTime(),
               },
@@ -145,7 +188,7 @@ const App = ({ Address }) => {
             element.transactionsIn = [
               ...element.transactionsIn,
               {
-                from: Address.address,
+                from: CurrentUser.address.address,
                 howMany: bal,
                 when: new Date().getTime(),
               },
@@ -164,60 +207,50 @@ const App = ({ Address }) => {
   //after successful login add new address if it doesn't exist
   const onLoginSuccess = (addr) => {
     var addressExists = false;
-    var i = 0;
 
     AddrHistory.map((target, move) => {
       if (target.address === addr) {
-        i = move;
         addressExists = true;
       }
       return null;
     });
 
-    if (!addressExists)
-      ADD_Address([
-        ...AddrHistory,
+    const user = {
+      address: addr,
+      createdAt: new Date().getTime(),
+      balance: 0,
+      transactions: [
         {
-          address: addr,
-          createdAt: new Date().getTime(),
-          balance: 100,
-          transactions: [
-            {
-              to: "",
-              howMany: 0,
-              when: "",
-            },
-          ],
-          transactionsIn: [
-            {
-              from: "",
-              howMany: 0,
-              when: "",
-            },
-          ],
+          to: "",
+          howMany: 0,
+          when: "",
         },
-      ]);
+      ],
+      transactionsIn: [
+        {
+          from: "",
+          howMany: 0,
+          when: "",
+        },
+      ],
+    };
 
-    AddrHistory.map((target, move) => {
-      if (target.address === addr) {
-        i = move;
-      }
+    if (!addressExists) {
+      console.log("adding user");
 
-      return null;
-    });
+      ADD_Address([...AddrHistory, user]);
+    }
 
-    Address = AddrHistory[i];
-
-    SetUSer(i);
+    SetUSer(user);
   };
 
   return (
     <Router>
       <div className="App">
-        {Address.address !== "" ? (
-          <Redirect to="/Dashboard" />
-        ) : (
+        {CurrentUser.address === "" ? (
           <Redirect to="/" />
+        ) : (
+          <Redirect to="/Dashboard" />
         )}
 
         <Switch>
@@ -227,7 +260,7 @@ const App = ({ Address }) => {
 
           <Route path="/Dashboard">
             <Dashboard
-              Address={Address}
+              Address={CurrentUser}
               AddrHistory={AddrHistory}
               handleMint={handleMint}
               handleTransfer={handleTransfer}
@@ -235,7 +268,7 @@ const App = ({ Address }) => {
           </Route>
 
           <Route path="/Explore">
-            <Explore Address={Address} AddrHistory={AddrHistory} />
+            <Explore Address={CurrentUser} AddrHistory={AddrHistory} />
           </Route>
         </Switch>
 

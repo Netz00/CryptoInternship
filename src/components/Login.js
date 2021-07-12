@@ -71,7 +71,7 @@ const Login = ({onLoginSuccess,history}) => {
   const handleSubmit =  (e) => {
     
     //updating values once again would be nice
-    e.preventDefault();//u slucaju refreshanja stranice gubimo sve podatke
+  e.preventDefault();//u slucaju refreshanja stranice gubimo sve podatke
   console.log(ethereum_address.isAddress(formData.address.trim()));
   console.log(formData.address.trim());
 
@@ -80,6 +80,9 @@ const Login = ({onLoginSuccess,history}) => {
     
 
       const cookies = new Cookies();
+      onLoginSuccess(formData.address);
+
+
 
       if(formData.rememberMe){
         console.log("login s cookiem");
@@ -93,7 +96,6 @@ const Login = ({onLoginSuccess,history}) => {
         //post request na / sa adresom u podacima POSTa
       }
 
-        onLoginSuccess(formData.address);
 
      
         history.push("/Dashboard"); 

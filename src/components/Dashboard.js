@@ -1,17 +1,19 @@
 import PropTypes from "prop-types";
 
 import { Redirect } from "react-router-dom";
-import React from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Cookies from "universal-cookie";
-import NumericInput from "./NumericInput";
 import ButtonHomemade from "./Button";
 
 import { withRouter } from "react-router-dom";
-import Modal from "react-modal";
+
+import ModalTransfer from "./ModalTransfer";
+
+import ModalMint from "./ModalMint";
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,19 +33,8 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    width: "fit-content",
-  },
 }));
 
-// Modal.setAppElement('main');
-Modal.setAppElement(document.getElementById("body2"));
 
 const Dashboard = ({
   Address,
@@ -52,22 +43,8 @@ const Dashboard = ({
   handleMint,
   handleTransfer,
 }) => {
-  let subtitle;
 
-  const [modalIsOpen, setIsOpen] = React.useState(false);
 
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = "#f00";
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
 
   const classes = useStyles();
   const cookies = new Cookies();
@@ -86,7 +63,9 @@ const Dashboard = ({
 
   const thisUser = AddrHistory[i];
 
-  const handleSubmit = (e) => {
+
+
+  const handleLogoutSubmit = (e) => {
     e.preventDefault();
     cookies.remove("address");
     history.push("/");
@@ -96,59 +75,46 @@ const Dashboard = ({
     history.push("/Explore");
   };
 
-  const handleMintSubmit = (e) => {
-    e.preventDefault();
-    handleMint(e.target.elements.NumericInput.value);
-  };
-  const handleTransfer2 = (e) => {
-    // handleTransfer(e.target.elements.Receiver.value, e.target.elements.Balance.value);
+
+
+
+
+  const handleTransfer2 = (adr,bal) => {
+    handleTransfer(adr,bal);
   };
 
   return (
     <Container id="body2" component="main" maxWidth="sm">
       <CssBaseline />
       {!inpectLogin() ? <Redirect to="/" /> : ""}
+
       <div className={classes.paper}>
-        <h>ADDRESS: {Address.address}</h>
-        <h>BALANCE: {thisUser.balance}</h>
-        <h>CREATED AT: {new Date(thisUser.createdAt).toUTCString()}</h>
-        <h>TRANSACTIONS: {}</h>
-        {thisUser.transactions.map((transaction) => {
+
+        <p key="addr">ADDRESS: {Address.address}</p>
+        <p key="bal">BALANCE: {thisUser.balance}</p>
+        <p key="date">CREATED AT: {new Date(thisUser.createdAt).toUTCString()}</p>
+        <p key="transac">TRANSACTIONS:</p>
+        {thisUser.transactions.map((transaction,move) => {
           return (
-            <h>
+            <p key={move}>
               TO ADDRESS: {transaction.to}
               <br></br>
               BALANCE: {transaction.howMany}
               <br></br>
               DATE: {transaction.when}
-            </h>
+            </p>
           );
         })}
 
-        <ButtonHomemade text="Mint" onClick={openModal} />
 
-        <div>
-          <Modal
-            sytle={{ backgroundcolor: "green" }}
-            isOpen={modalIsOpen}
-            onAfterOpen={afterOpenModal}
-            onRequestClose={closeModal}
-            style={classes.content}
-            contentLabel="Mint"
-          >
-            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Mint</h2>
-            <button onClick={closeModal}>close</button>
-            <form onSubmit={handleMintSubmit}>
-              <NumericInput id="NumericInput" />
-              <button>Mint</button>
-            </form>
-          </Modal>
-        </div>
+        <ModalTransfer handleSubmit={handleTransfer2}/>
+
+        <ModalMint handleMint={handleMint}/>
+
 
         <ButtonHomemade text="Explore" onClick={handleExplore} />
-        <ButtonHomemade text="Transfer" onClick={handleTransfer2} />
 
-        <form className={classes.form} onSubmit={handleSubmit}>
+        <form className={classes.form} onSubmit={handleLogoutSubmit}>
           <Button
             type="submit"
             fullWidth
@@ -159,15 +125,13 @@ const Dashboard = ({
             Log out
           </Button>
         </form>
-
-        <p>Welcome to dashboard {Address.address}</p>
       </div>
     </Container>
   );
 };
 
 Dashboard.propTypes = {
-  Address: PropTypes.isRequired,
+  Address: PropTypes.object.isRequired,
 };
 
 export default withRouter(Dashboard);
