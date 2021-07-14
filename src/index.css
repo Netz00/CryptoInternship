@@ -90,3 +90,83 @@ ol, ul {
   height: 48;
   padding: 0 30px;
 }
+
+
+
+
+
+
+
+
+.container {
+  display: grid;
+  grid-template-columns: 350px 50px;
+  grid-template-rows: 49px 43px 84px 57px 50px;
+  gap: 7px 4px;
+  grid-auto-flow: row;
+  justify-content: center;
+  align-content: space-around;
+  grid-template-areas:
+    "Transfer B"
+    "balance balance"
+    "address address"
+    "balanceToSend balanceToSend"
+    "SumbmitButton SumbmitButton";
+
+    width: 425px;
+    height: auto;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+
+
+  background: #424242;
+  border: 2px solid #000;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+
+    padding: 10px;
+
+}
+
+.Transfer {
+
+  justify-self: start;
+  align-self: start;
+  grid-area: Transfer;
+}
+
+.B {
+  justify-self: end; 
+  align-self: start; 
+  grid-area: B; 
+}
+
+.balance {
+
+  justify-self: center;
+  grid-area: balance;
+}
+
+.address {
+  width: 371px;
+  justify-self: center;
+  grid-area: address;
+}
+
+.balanceToSend {
+
+  justify-self: center;
+  grid-area: balanceToSend;
+}
+
+.SumbmitButton {
+
+  justify-self: end;
+  align-self: end;
+  grid-area: SumbmitButton;
+}

@@ -1,71 +1,91 @@
-import ModalWeb from 'react-modal';
-import ButtonHomemade from './Button';
-import NumericInput from './NumericInput';
-import { useState } from 'react';
-import AddressInput from './AddressInput';
+import Button from "@material-ui/core/Button";
+import NumericInput from "./NumericInput";
+import { useState } from "react";
+import AddressInput from "./AddressInput";
+import { FaTimes } from "react-icons/fa";
+import { makeStyles } from "@material-ui/core/styles";
+import Modal from "@material-ui/core/Modal";
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    height: "fit-content",
+    position: "relative",
+    width: 500,
+    backgroundColor: "#424242",
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    display: "inline-flex",
+  },
+  exit: {
+    color: "red",
+    cursor: "pointer",
+  },
+  submitButton: {
+    cursor: "pointer",
+  },
+}));
 
-const ModalTransfer = ({Address, handleSubmit}) => {
+const ModalTransfer = ({ Address, handleSubmit }) => {
+  const classes = useStyles();
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [errorMsg, updateErrorMsg] = useState("");
 
-    let subtitle;
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
-    const [modalIsOpen, setIsOpen] = useState(false);
-    const [errorMsg, updateErrorMsg] = useState("");
+  const onSumbit = (e) => {
+    e.preventDefault();
+    const address = e.target.elements.address.value.trim();
+    const bal = e.target.elements.NumericInput.value.trim();
+    if (!handleSubmit(address, bal)) updateErrorMsg("Insufficient balance.");
+    else updateErrorMsg("Success");
+  };
 
-    function openModal() {
-      setIsOpen(true);
-    }
-  
-    function afterOpenModal() {
-      // references are now sync'd and can be accessed.
-      subtitle.style.color = '#f00';
-    }
-  
-    function closeModal() {
-      setIsOpen(false);
-    }
+  return (
+    <div>
+      <Button variant="contained" color="primary" onClick={openModal}>
+        Transfer
+      </Button>
 
-    
+      <Modal
+        open={modalIsOpen}
+        onClose={closeModal}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <form onSubmit={onSumbit}>
+          <div class="container">
+            <div class="Transfer">
+              <h2 id="simple-modal-title">Transfer</h2>
+            </div>
+            <div class="B">
+              <FaTimes className={classes.exit} onClick={closeModal} />
+            </div>
 
-    const onSumbit =  (e) => {
-      e.preventDefault();
-      const address = e.target.elements.address.value.trim();
-      const bal=e.target.elements.NumericInput.value.trim();
-      if(!handleSubmit(address,bal))
-      updateErrorMsg("Insufficient balance.");
-      else
-      updateErrorMsg("Success");
+            <div class="balance simple-modal-description">
+              <p>Current balance: {Address.balance}</p>
+            </div>
 
-    };
-  
+            <div class="address simple-modal-description">
+              <AddressInput />
+            </div>
+            <div class="balanceToSend simple-modal-description">
+              <NumericInput />
+            </div>
+            <div class="SumbmitButton simple-modal-description">
+              <Button variant="contained" className={classes.submitButton}>
+                Transfer
+              </Button>
+            </div>
+          </div>
+        </form>
+      </Modal>
+    </div>
+  );
+};
 
-    return (
-        <div id="body3">
-               <ButtonHomemade text="Transfer" onClick={openModal} />
-
-               
-                <ModalWeb
-                sytle={{backgroundcolor:'green'}}
-                isOpen={modalIsOpen}
-                onAfterOpen={afterOpenModal}
-                onRequestClose={closeModal}
-                contentLabel="Mint"
-                appElement={document.getElementById('body3')}
-
-                >
-                <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Mint</h2>
-                <p>Current balance: {Address.balance}</p>
-                <button onClick={closeModal}>close</button>
-                <form onSubmit={onSumbit}>
-                    <p id="errorMsg">{errorMsg}</p>
-                    <AddressInput />
-                    <NumericInput />
-                    <button>Transfer</button>
-                </form>
-                </ModalWeb>
-        </div>
-        
-    )
-}
-
-export default ModalTransfer
+export default ModalTransfer;

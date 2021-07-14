@@ -283,7 +283,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className="App">
+      <div id="main" className="App">
         {CurrentUser.address === "" ? (
           <Redirect to="/" />
         ) : (
