@@ -1,40 +1,29 @@
 import PropTypes from "prop-types";
 
-import { Redirect } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Cookies from "universal-cookie";
 import ButtonHomemade from "./Button";
 
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 
 import ModalTransfer from "./ModalTransfer";
 
 import ModalMint from "./ModalMint";
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(10),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundcolor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "80%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
+ 
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(1, 1, 2),
   },
 }));
-
 
 const Dashboard = ({
   Address,
@@ -43,64 +32,34 @@ const Dashboard = ({
   handleMint,
   handleTransfer,
 }) => {
-
-
-
   const classes = useStyles();
   const cookies = new Cookies();
 
-  function inpectLogin() {
-    return true;
-  }
   console.log("adresa: " + Address.address);
   console.log(AddrHistory);
 
   const handleLogoutSubmit = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     cookies.remove("address");
-    history.push("/");
+    //history.push("/");
   };
 
   const handleExplore = (e) => {
     history.push("/Explore");
   };
 
-
   return (
     <Container id="body2" component="main" maxWidth="sm">
-      <CssBaseline />
-      {!inpectLogin() ? <Redirect to="/" /> : ""}
-
-      <div className={classes.paper}>
-
-        <p key="addr">ADDRESS: {Address.address}</p>
-        <p key="bal">BALANCE: {Address.balance}</p>
-        <p key="date">CREATED AT: {new Date(Address.createdAt).toUTCString()}</p>
-        <p key="transac">TRANSACTIONS:</p>
-        {Address.transactions.map((transaction,move) => {
-          return (
-            <p key={move}>
-              TO ADDRESS: {transaction.to}
-              <br></br>
-              BALANCE: {transaction.howMany}
-              <br></br>
-              DATE: {transaction.when}
-            </p>
-          );
-        })}
-
-
-        <ModalTransfer Address={Address} handleSubmit={handleTransfer}/>
-
-        <ModalMint Address={Address} handleMint={handleMint}/>
-
-
-        <ButtonHomemade text="Explore" onClick={handleExplore} />
-
-        <form className={classes.form} onSubmit={handleLogoutSubmit}>
+      {Address.address === "" ? (
+        <Redirect to="/" />
+      ) : (
+        <Redirect to="/Dashboard" />
+      )}
+      
+      <div class="header">
+        <form onSubmit={handleLogoutSubmit}>
           <Button
             type="submit"
-            fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
@@ -108,6 +67,17 @@ const Dashboard = ({
             Log out
           </Button>
         </form>
+      </div>
+
+      <div className={classes.paper}>
+        <p key="addr">ADDRESS: {Address.address}</p>
+        <p key="bal">BALANCE: {Address.balance}</p>
+        <br></br>
+        <ModalTransfer Address={Address} handleSubmit={handleTransfer} />
+<br></br>
+        <ModalMint Address={Address} handleMint={handleMint} />
+        <br></br>
+        <ButtonHomemade text="Explore" onClick={handleExplore} />
       </div>
     </Container>
   );

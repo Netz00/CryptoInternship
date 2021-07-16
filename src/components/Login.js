@@ -1,8 +1,6 @@
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,7 +10,7 @@ import AddressInput from "./AddressInput";
 
 import PropTypes from "prop-types";
 
-import { withRouter } from "react-router-dom";
+import { withRouter,   Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,29 +34,20 @@ const useStyles = makeStyles((theme) => ({
 
 const ethereum_address = require("ethereum-address");
 
-const Login = ({ onLoginSuccess, history }) => {
+const Login = ({ onLoginSuccess, history, CurrentUser }) => {
   const classes = useStyles();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const address = e.target.elements.address.value.trim();
-    const rememberMe = e.target.elements.rememberMe.checked;
 
     if (ethereum_address.isAddress(address)) {
       const cookies = new Cookies();
+
       onLoginSuccess(address);
-
-      if (rememberMe) {
-        console.log("login s cookiem");
-
-        cookies.set("address", address, { path: "/" });
-        //obicni request na /
-      } else {
-        console.log("login bez cookiem");
-        cookies.remove("address");
-        //post request na / sa adresom u podacima POSTa
-      }
+      cookies.set("address", address, { path: "/" });
+       
 
       history.push("/Dashboard");
     } else {
@@ -70,6 +59,11 @@ const Login = ({ onLoginSuccess, history }) => {
 
   return (
     <Container component="main" maxWidth="sm">
+      {CurrentUser.address === "" ? (
+          <Redirect to="/" />
+        ) : (
+          <Redirect to="/Dashboard" />
+        )}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -84,18 +78,6 @@ const Login = ({ onLoginSuccess, history }) => {
           onSubmit={handleSubmit}
         >
           <AddressInput />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="rememberMe"
-                id="rememberMe"
-                value="yes"
-                color="primary"
-              />
-            }
-            label="Remember me"
-          />
           <Button
             type="submit"
             fullWidth

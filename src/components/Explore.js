@@ -1,8 +1,9 @@
-import { withRouter } from "react-router-dom";
-import ButtonHomemade from "./Button";
+import { withRouter, Redirect } from "react-router-dom";
+import Button from "@material-ui/core/Button";
 import AddressInput from "./AddressInput";
 import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
 
 const initialFormData = Object.freeze({
   address: "",
@@ -24,9 +25,15 @@ const initialFormData = Object.freeze({
   ],
 });
 
-const Explore = ({ Address, AddrHistory, history, newAddress }) => {
-  const [formData, updateFormData] = useState(initialFormData);
+const useStyles = makeStyles((theme) => ({
+  back: {
+    margin: theme.spacing(1, 1, 2),
+  },
+}));
 
+const Explore = ({ Address, history, newAddress }) => {
+  const [formData, updateFormData] = useState(initialFormData);
+  const classes = useStyles();
   const handleChangeText = async (addr) => {
     const searchRes = newAddress(addr);
     console.log(formData);
@@ -35,49 +42,79 @@ const Explore = ({ Address, AddrHistory, history, newAddress }) => {
   };
 
   return (
-    <div>
-      <ButtonHomemade
-        text="Back"
-        onClick={() => {
-          history.push("/Dashboard");
-        }}
-      />
-      <AddressInput onTextChange={handleChangeText} />
-      <Typography component="h1" variant="h5">
-        <p key="addr">ADDRESS: {formData.address}</p>
-        <p key="bal">BALANCE: {formData.balance}</p>
-        <p key="date">
-          CREATED AT: {new Date(formData.createdAt).toUTCString()}
-        </p>
-        <p key="transac">TRANSACTIONS SEND:</p>
-        {formData.transactions.map((transaction, move) => {
-          return (
-            <p key={move}>
-              TO ADDRESS: {transaction.to}
-              <br></br>
-              BALANCE: {transaction.howMany}
-              <br></br>
-              DATE: {new Date(transaction.when).toUTCString()}
-            </p>
-          );
-        })}
+    <>
 
-<p key="transacIN">TRANSACTIONS RECEIVED:</p>
-        {formData.transactionsIn.map((transaction, move) => {
-          return (
-            <p key={move}>
-              FROM ADDRESS: {transaction.from}
-              <br></br>
-              BALANCE: {transaction.howMany}
-              <br></br>
-              DATE: {new Date(transaction.when).toUTCString()}
-            </p>
-          );
-        })}
+<div class="header">
+<Button
+          variant="contained"
+          color="primary"
+          className={classes.back}
+          onClick={() => {
+            history.push("/Dashboard");
+          }}
+        >
+          Back
+        </Button>
+      </div>
+
+    <div class="explore_container">
+      {Address.address === "" ? (
+        <Redirect to="/" />
+      ) : (
+        <Redirect to="/Explore" />
+      )}
 
 
-      </Typography>
+      <div class="address">
+        <AddressInput onTextChange={handleChangeText} />
+      </div>
+
+      <div class="balance">
+        <Typography component="h1" variant="h5">
+          <p key="bal">BALANCE: {formData.balance}</p>
+        </Typography>
+      </div>
+      <div class="createdAt">
+        <Typography component="h1" variant="h5">
+          <p key="date">
+            CREATED AT: {new Date(formData.createdAt).toUTCString()}
+          </p>
+        </Typography>
+      </div>
+      <div class="TransactionsOUT">
+        <Typography component="h1" variant="h5">
+          <p key="transac">TRANSACTIONS SENT:</p>
+          {formData.transactions.map((transaction, move) => {
+            return (
+              <p key={move}>
+                TO ADDRESS: {transaction.to}
+                <br></br>
+                BALANCE: {transaction.howMany}
+                <br></br>
+                DATE: {new Date(transaction.when).toUTCString()}
+              </p>
+            );
+          })}
+        </Typography>
+      </div>
+      <div class="TransactionsIN">
+        <Typography component="h1" variant="h5">
+          <p key="transacIN">TRANSACTIONS RECEIVED:</p>
+          {formData.transactionsIn.map((transaction, move) => {
+            return (
+              <p key={move}>
+                FROM ADDRESS: {transaction.from}
+                <br></br>
+                BALANCE: {transaction.howMany}
+                <br></br>
+                DATE: {new Date(transaction.when).toUTCString()}
+              </p>
+            );
+          })}
+        </Typography>
+      </div>
     </div>
+    </>
   );
 };
 
