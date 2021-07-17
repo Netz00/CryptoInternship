@@ -4,6 +4,7 @@ import AddressInput from "./AddressInput";
 import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { HiBackspace } from "react-icons/hi";
 
 const initialFormData = Object.freeze({
   address: "",
@@ -28,6 +29,8 @@ const initialFormData = Object.freeze({
 const useStyles = makeStyles((theme) => ({
   back: {
     margin: theme.spacing(1, 1, 2),
+    color: "black",
+    cursor: "pointer",
   },
 }));
 
@@ -45,16 +48,10 @@ const Explore = ({ Address, history, newAddress }) => {
     <>
 
 <div class="header">
-<Button
-          variant="contained"
-          color="primary"
-          className={classes.back}
-          onClick={() => {
+
+<HiBackspace size="40px" className={classes.back}  onClick={() => {
             history.push("/Dashboard");
-          }}
-        >
-          Back
-        </Button>
+          }}/>
       </div>
 
     <div class="explore_container">
