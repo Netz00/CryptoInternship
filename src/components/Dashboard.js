@@ -70,7 +70,7 @@ const Dashboard = ({
         <Redirect to="/Dashboard" />
       )}
       
-      <div class="header">
+      <div className="header">
         <form onSubmit={handleLogoutSubmit}  className={classes.form}>
           <button
             type="submit"

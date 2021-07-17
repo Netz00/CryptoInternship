@@ -41,8 +41,10 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
     e.preventDefault();
     const address = e.target.elements.address.value.trim();
     const bal = e.target.elements.NumericInput.value.trim();
-    
-    if (bal*1 === 0) updateErrorMsg("Pick value to send.");
+
+    if (bal * 1 === 0) updateErrorMsg("Pick value >0 to send.");
+    else if (address === Address.address)
+      updateErrorMsg("This address belongs to you.");
     else if (!handleSubmit(address, bal))
       updateErrorMsg("Insufficient balance.");
     else updateErrorMsg("Success");
@@ -61,11 +63,11 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
         aria-describedby="simple-modal-description"
       >
         <form onSubmit={onSumbit}>
-          <div class="container">
-            <div class="Transfer">
+          <div className="container">
+            <div className="Transfer">
               <h2 id="simple-modal-title">Transfer</h2>
             </div>
-            <div class="B">
+            <div className="B">
               <FaTimes
                 className={classes.exit}
                 onClick={closeModal}
@@ -73,22 +75,22 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
               />
             </div>
 
-            <div class="balance simple-modal-description">
+            <div className="balance simple-modal-description">
               <p>Current balance: {Address.balance}</p>
             </div>
 
-            <div class="address simple-modal-description">
+            <div className="address simple-modal-description">
               <AddressInput />
             </div>
-            <div class="balanceToSend simple-modal-description">
+            <div className="balanceToSend simple-modal-description">
               <NumericInput />
             </div>
 
-            <div class="msg">
+            <div className="msg">
               <p>{errorMsg}</p>
             </div>
 
-            <div class="SumbmitButton simple-modal-description">
+            <div className="SumbmitButton simple-modal-description">
               <Button
                 variant="contained"
                 color="primary"
