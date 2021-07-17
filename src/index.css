@@ -1,17 +1,12 @@
-body {
-  font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 20px;
-  background-color:#000;
-  color: #3f51b5;
-}
-
 html, body{
   min-height:100%;
 } 
 body {
+  font: 14px sans-serif;
   background: #4DA0B0;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to bottom, #D39D38, #4DA0B0);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom, #D39D38, #4DA0B0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }; 
+  background: linear-gradient(to bottom, #D39D38, #4DA0B0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ 
+}; 
 
 
 ol, ul {
@@ -95,7 +90,7 @@ ol, ul {
 /*EXPLORE*/
 /*https://grid.layoutit.com/*/
 .explore_container {
-  margin-top: 6%;
+  margin: 5%;
   display: grid;
   grid-template-columns: .5fr .5fr;
   grid-template-rows: 80px 80px 80px 80px;
@@ -116,14 +111,14 @@ ol, ul {
 
 
 .TransactionsIN {
-  justify-self: start; 
+  justify-self: center; 
   align-self: start;
   grid-area: TransactionsIN; 
   overflow: auto;
   height: 340px;
 }
 .TransactionsOUT {
-  justify-self: start; 
+  justify-self: center;
   align-self: start; 
   grid-area: TransactionsOUT; 
   overflow: auto;
@@ -230,13 +225,11 @@ ol, ul {
   left: 0;
   right: 0;
   top: 0;
-  height: 10%;
+  height: 65px;
   background-color: darkslategrey;
   border-bottom: 2px solid #ffd400e0;
   
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 
-  justify-self: end; 
-  align-self: start; 
 }

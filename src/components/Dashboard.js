@@ -4,7 +4,8 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Cookies from "universal-cookie";
-import ButtonHomemade from "./Button";
+import { HiOutlineLogout } from "react-icons/hi";
+
 
 import { withRouter, Redirect } from "react-router-dom";
 
@@ -21,8 +22,21 @@ const useStyles = makeStyles((theme) => ({
   },
  
   submit: {
-    margin: theme.spacing(1, 1, 2),
+    margin: theme.spacing(1,1),
+    background: "transparent",
+    border:"0px"
   },
+  icon:{
+    color: "black",
+    cursor: "pointer",
+  },
+
+  form:{
+    marginLeft: "auto",
+    width: "fit-content",
+    height: "fit-content",
+}
+  
 }));
 
 const Dashboard = ({
@@ -57,15 +71,15 @@ const Dashboard = ({
       )}
       
       <div class="header">
-        <form onSubmit={handleLogoutSubmit}>
-          <Button
+        <form onSubmit={handleLogoutSubmit}  className={classes.form}>
+          <button
             type="submit"
-            variant="contained"
-            color="primary"
             className={classes.submit}
           >
-            Log out
-          </Button>
+                      <HiOutlineLogout size="40px" className={classes.icon}/>
+
+          </button>
+
         </form>
       </div>
 
@@ -77,7 +91,7 @@ const Dashboard = ({
 <br></br>
         <ModalMint Address={Address} handleMint={handleMint} />
         <br></br>
-        <ButtonHomemade text="Explore" onClick={handleExplore} />
+        <Button variant="contained" color="primary" onClick={handleExplore}>Explore</Button>
       </div>
     </Container>
   );

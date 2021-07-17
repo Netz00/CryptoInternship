@@ -68,7 +68,7 @@ const ModalMint = ({Address,handleMint}) => {
       <form onSubmit={handleMintSubmit}>
         <div class="container">
           <div class="Transfer">
-            <h2 id="simple-modal-title">Transfer</h2>
+            <h2 id="simple-modal-title">Mint</h2>
           </div>
           <div class="B">
             <FaTimes className={classes.exit} onClick={closeModal} size="40px"/>

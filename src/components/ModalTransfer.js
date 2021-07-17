@@ -41,8 +41,10 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
     e.preventDefault();
     const address = e.target.elements.address.value.trim();
     const bal = e.target.elements.NumericInput.value.trim();
-    console.log(address);
-    if (!handleSubmit(address, bal)) updateErrorMsg("Insufficient balance.");
+    
+    if (bal*1 === 0) updateErrorMsg("Pick value to send.");
+    else if (!handleSubmit(address, bal))
+      updateErrorMsg("Insufficient balance.");
     else updateErrorMsg("Success");
   };
 
@@ -64,7 +66,11 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
               <h2 id="simple-modal-title">Transfer</h2>
             </div>
             <div class="B">
-              <FaTimes className={classes.exit} onClick={closeModal} size="40px"/>
+              <FaTimes
+                className={classes.exit}
+                onClick={closeModal}
+                size="40px"
+              />
             </div>
 
             <div class="balance simple-modal-description">
@@ -82,9 +88,13 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
               <p>{errorMsg}</p>
             </div>
 
-
             <div class="SumbmitButton simple-modal-description">
-              <Button variant="contained" color="primary" type="submit" className={classes.submitButton}>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                className={classes.submitButton}
+              >
                 Transfer
               </Button>
             </div>
