@@ -121,29 +121,29 @@ const App = () => {
     const tempHistory = AddrHistory.map((element) => {
       if (element.address === CurrentUser.address) {
         element.balance += bal * 1;
-        element.transactions = [
-          ...element.transactions,
+        element.transactionsIn = [
+          ...element.transactionsIn,
           {
-            to: "MINT",
-            howMany: bal,
+            from: "MINT",
+            howMany: bal*1,
             when: new Date().getTime(),
           },
         ];
       }
-      console.log(CurrentUser.address + ": " + bal);
-
       return element;
     });
     ADD_Address(tempHistory);
+    return true;
   };
 
   //transfer funds
   const handleTransfer = (to, bal) => {
     let success = false;
+    bal=(bal * 1);
     const tempHistory = AddrHistory.map((element) => {
       if (element.address === CurrentUser.address && element.balance >= bal) {
         success = true;
-        element.balance -= bal * 1;
+        element.balance -= bal;
         element.transactions = [
           ...element.transactions,
           {
@@ -193,11 +193,11 @@ const App = () => {
       } else {
         const tempHistory2 = AddrHistory.map((element) => {
           if (element.address === to) {
-            element.balance += bal * 1;
+            element.balance += bal;
             element.transactionsIn = [
               ...element.transactionsIn,
               {
-                from: CurrentUser.address.address,
+                from: CurrentUser.address,
                 howMany: bal,
                 when: new Date().getTime(),
               },
@@ -208,7 +208,6 @@ const App = () => {
 
         ADD_Address(tempHistory2);
       }
-      //add balance to otheracc
       return true;
     }
   };

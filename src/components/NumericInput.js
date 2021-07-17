@@ -1,9 +1,9 @@
-import NumericInputweb from 'react-numeric-input';
+import NumericInputWeb from 'react-numeric-input';
 
 const NumericInput = ({onChange}) => {
     return (
         
-              <NumericInputweb 
+              <NumericInputWeb 
               id="NumericInput"
               name="NumericInput"
               min={ 0 } 
@@ -36,10 +36,10 @@ const NumericInput = ({onChange}) => {
                     outline: 'none'
                 },
                 arrowUp: {
-                    borderBottomColor: 'rgb(0 0 0 / 71%);'
+                    borderBottomColor: 'rgb(0 0 0 / 71%)',
                 },
                 arrowDown: {
-                    borderTopColor: 'rgb(0 0 0 / 71%);'
+                    borderTopColor: 'rgb(0 0 0 / 71%)',
                 }
             }}
             />

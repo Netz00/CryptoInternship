@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 const ModalMint = ({Address,handleMint}) => {
     const classes = useStyles();
     const [modalIsOpen, setIsOpen] = useState(false);
-
+    const [errorMsg, updateErrorMsg] = useState("");
 
     function openModal() {
         setIsOpen(true);
@@ -49,7 +49,12 @@ const ModalMint = ({Address,handleMint}) => {
     
       const handleMintSubmit = (e) => {
         e.preventDefault();
-        handleMint(e.target.elements.NumericInput.value);
+
+        const bal = e.target.elements.NumericInput.value.trim();
+        if (bal * 1 === 0) updateErrorMsg("Pick value >0 to send.");
+        else if(!handleMint(e.target.elements.NumericInput.value))
+        updateErrorMsg("Error.");
+        else updateErrorMsg("Success");
       };
     
   return (
@@ -66,30 +71,31 @@ const ModalMint = ({Address,handleMint}) => {
       aria-describedby="simple-modal-description"
     >
       <form onSubmit={handleMintSubmit}>
-        <div class="container">
-          <div class="Transfer">
+        <div className="container">
+          <div className="Transfer">
             <h2 id="simple-modal-title">Mint</h2>
           </div>
-          <div class="B">
+          <div className="B">
             <FaTimes className={classes.exit} onClick={closeModal} size="40px"/>
           </div>
 
-          <div class="balance simple-modal-description">
+          <div className="balance simple-modal-description">
             <p>Current balance: {Address.balance}</p>
           </div>
 
-          <div class="address simple-modal-description">
+          <div className="address simple-modal-description">
           
           </div>
-          <div class="balanceToSend simple-modal-description">
+          <div className="balanceToSend simple-modal-description">
             <NumericInput />
           </div>
 
-          <div class="msg">
+          <div className="msg">
+          <p>{errorMsg}</p>
           </div>
 
 
-          <div class="SumbmitButton simple-modal-description">
+          <div className="SumbmitButton simple-modal-description">
             <Button variant="contained" color="primary" type="submit" className={classes.submitButton}>
             Mint
             </Button>
