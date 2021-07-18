@@ -19,27 +19,7 @@ import {
 const ethereum_address = require("ethereum-address");
 
 //stores information about entire "blockhain"
-const initialFormData = Object.freeze([
-  {
-    address: "",
-    createdAt: "",
-    balance: 0,
-    transactions: [
-      {
-        to: "",
-        howMany: 0,
-        when: "",
-      },
-    ],
-    transactionsIn: [
-      {
-        from: "",
-        howMany: 0,
-        when: "",
-      },
-    ],
-  },
-]);
+const initialFormData = Object.freeze([]);
 
 //stores the information about current user
 const initialUser = Object.freeze({
@@ -47,18 +27,18 @@ const initialUser = Object.freeze({
   createdAt: "",
   balance: 0,
   transactions: [
-    {
+    /*{
       to: "",
       howMany: 0,
       when: "",
-    },
+    },*/
   ],
   transactionsIn: [
-    {
+    /*   {
       from: "",
       howMany: 0,
       when: "",
-    },
+    },*/
   ],
 });
 
@@ -91,20 +71,8 @@ const App = () => {
           address: addr,
           createdAt: new Date().getTime(),
           balance: 0,
-          transactions: [
-            {
-              to: "",
-              howMany: 0,
-              when: "",
-            },
-          ],
-          transactionsIn: [
-            {
-              from: "",
-              howMany: 0,
-              when: "",
-            },
-          ],
+          transactions: [],
+          transactionsIn: [],
         };
 
         ADD_Address([...AddrHistory, user]);
@@ -125,7 +93,7 @@ const App = () => {
           ...element.transactionsIn,
           {
             from: "MINT",
-            howMany: bal*1,
+            howMany: bal * 1,
             when: new Date().getTime(),
           },
         ];
@@ -139,7 +107,7 @@ const App = () => {
   //transfer funds
   const handleTransfer = (to, bal) => {
     let success = false;
-    bal=(bal * 1);
+    bal = bal * 1;
     const tempHistory = AddrHistory.map((element) => {
       if (element.address === CurrentUser.address && element.balance >= bal) {
         success = true;
@@ -174,13 +142,7 @@ const App = () => {
             address: to,
             createdAt: new Date().getTime(),
             balance: bal,
-            transactions: [
-              {
-                to: "",
-                howMany: 0,
-                when: "",
-              },
-            ],
+            transactions: [],
             transactionsIn: [
               {
                 from: CurrentUser.address,
@@ -219,35 +181,21 @@ const App = () => {
     AddrHistory.map((target, move) => {
       if (target.address === addr) {
         addressExists = true;
-        user=target;
+        user = target;
       }
       return null;
     });
 
-  
-
     if (!addressExists) {
       console.log("adding user");
 
-        user = {
-      address: addr,
-      createdAt: new Date().getTime(),
-      balance: 0,
-      transactions: [
-        {
-          to: "",
-          howMany: 0,
-          when: "",
-        },
-      ],
-      transactionsIn: [
-        {
-          from: "",
-          howMany: 0,
-          when: "",
-        },
-      ],
-    };
+      user = {
+        address: addr,
+        createdAt: new Date().getTime(),
+        balance: 0,
+        transactions: [],
+        transactionsIn: [],
+      };
 
       ADD_Address([...AddrHistory, user]);
     }
@@ -271,20 +219,8 @@ const App = () => {
         address: addr,
         createdAt: new Date().getTime(),
         balance: 0,
-        transactions: [
-          {
-            to: "",
-            howMany: 0,
-            when: "",
-          },
-        ],
-        transactionsIn: [
-          {
-            from: "",
-            howMany: 0,
-            when: "",
-          },
-        ],
+        transactions: [],
+        transactionsIn: [],
       };
       console.log("add user");
       ADD_Address([...AddrHistory, user]);
@@ -303,7 +239,7 @@ const App = () => {
 
         <Switch>
           <Route exact path="/">
-            <Login onLoginSuccess={onLoginSuccess} CurrentUser={CurrentUser}/>
+            <Login onLoginSuccess={onLoginSuccess} CurrentUser={CurrentUser} />
           </Route>
 
           <Route path="/Dashboard">
@@ -316,10 +252,7 @@ const App = () => {
           </Route>
 
           <Route path="/Explore">
-            <Explore
-              newAddress={newAddress}
-              Address={CurrentUser}
-            />
+            <Explore newAddress={newAddress} Address={CurrentUser} />
           </Route>
         </Switch>
 

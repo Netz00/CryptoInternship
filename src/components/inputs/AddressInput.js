@@ -1,15 +1,14 @@
 import TextField from "@material-ui/core/TextField";
 import PropTypes from "prop-types";
 import { useState } from "react";
+const ethereum_address = require("ethereum-address");
 
-const initialFormData = Object.freeze({
-  address: "",
-  addressValid: true,
-});
+function AddressInput({ text, onTextChange }) {
 
-function AddressInput({ onTextChange }) {
-  const ethereum_address = require("ethereum-address");
-  const [formData, updateFormData] = useState(initialFormData);
+  const [formData, updateFormData] = useState({
+    address: text,
+    addressValid: true,
+  });
 
   const handleChangeText = (e) => {
     const newMessageObj = {
@@ -42,10 +41,12 @@ function AddressInput({ onTextChange }) {
 
 AddressInput.defaultProps = {
   onTextChange: () => {},
+  text: "",
 };
 
 AddressInput.propTypes = {
   onTextChange: PropTypes.func,
+  text: PropTypes.string,
 };
 
 export default AddressInput;

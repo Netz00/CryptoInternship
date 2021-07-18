@@ -6,11 +6,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Cookies from "universal-cookie";
-import AddressInput from "./AddressInput";
+import AddressInput from "./inputs/AddressInput";
 
 import PropTypes from "prop-types";
 
-import { withRouter,   Redirect } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,7 +47,6 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
 
       onLoginSuccess(address);
       cookies.set("address", address, { path: "/" });
-       
 
       history.push("/Dashboard");
     } else {
@@ -60,10 +59,10 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
   return (
     <Container component="main" maxWidth="sm">
       {CurrentUser.address === "" ? (
-          <Redirect to="/" />
-        ) : (
-          <Redirect to="/Dashboard" />
-        )}
+        <Redirect to="/" />
+      ) : (
+        <Redirect to="/Dashboard" />
+      )}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
