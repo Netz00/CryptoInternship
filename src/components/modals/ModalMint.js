@@ -1,7 +1,6 @@
-import Button from "@material-ui/core/Button";
-import NumericInput from "./NumericInput";
+import NumericInput from "../inputs/NumericInput";
 import { useState } from "react";
-import AddressInput from "./AddressInput";
+import Button from "@material-ui/core/Button";
 import { FaTimes } from "react-icons/fa";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
@@ -29,31 +28,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModalTransfer = ({ Address, handleSubmit }) => {
+const ModalMint = ({ Address, handleMint }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [errorMsg, updateErrorMsg] = useState("");
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  function openModal() {
+    setIsOpen(true);
+  }
 
-  const onSumbit = (e) => {
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const handleMintSubmit = (e) => {
     e.preventDefault();
-    const address = e.target.elements.address.value.trim();
-    const bal = e.target.elements.NumericInput.value.trim();
 
-    if (bal * 1 === 0) updateErrorMsg("Pick value >0 to send.");
-    else if (address === Address.address)
-      updateErrorMsg("This address belongs to you.");
-    else if (!handleSubmit(address, bal))
-      updateErrorMsg("Insufficient balance.");
-    else updateErrorMsg("Success");
+    const bal = e.target.elements.NumericInput.value.trim()*1;
+
+    if (bal === 0) 
+      updateErrorMsg("Pick value >0 to send.");
+
+    else if (!handleMint(bal))
+      updateErrorMsg("Error.");
+
+    else 
+      updateErrorMsg("Success");
+      
   };
 
   return (
     <div>
       <Button variant="contained" color="primary" onClick={openModal}>
-        Transfer
+        Mint
       </Button>
 
       <Modal
@@ -62,10 +69,10 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <form onSubmit={onSumbit}>
+        <form onSubmit={handleMintSubmit}>
           <div className="container">
             <div className="Transfer">
-              <h2 id="simple-modal-title">Transfer</h2>
+              <h2 id="simple-modal-title">Mint</h2>
             </div>
             <div className="B">
               <FaTimes
@@ -79,9 +86,7 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
               <p>Current balance: {Address.balance}</p>
             </div>
 
-            <div className="address simple-modal-description">
-              <AddressInput />
-            </div>
+            <div className="address simple-modal-description"></div>
             <div className="balanceToSend simple-modal-description">
               <NumericInput />
             </div>
@@ -97,7 +102,7 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
                 type="submit"
                 className={classes.submitButton}
               >
-                Transfer
+                Mint
               </Button>
             </div>
           </div>
@@ -107,4 +112,4 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
   );
 };
 
-export default ModalTransfer;
+export default ModalMint;

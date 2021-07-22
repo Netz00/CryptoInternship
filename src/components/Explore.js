@@ -1,29 +1,9 @@
 import { withRouter, Redirect } from "react-router-dom";
-import AddressInput from "./AddressInput";
+import AddressInput from "./inputs/AddressInput";
 import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { HiBackspace } from "react-icons/hi";
-
-const initialFormData = Object.freeze({
-  address: "",
-  createdAt: "",
-  balance: 0,
-  transactions: [
-    {
-      to: "",
-      howMany: 0,
-      when: "",
-    },
-  ],
-  transactionsIn: [
-    {
-      from: "",
-      howMany: 0,
-      when: "",
-    },
-  ],
-});
+import { HiBackspace, HiOutlineSearch } from "react-icons/hi";
 
 const useStyles = makeStyles((theme) => ({
   back: {
@@ -31,16 +11,36 @@ const useStyles = makeStyles((theme) => ({
     color: "black",
     cursor: "pointer",
   },
+  submit: {
+    margin: theme.spacing(1, 1),
+    background: "transparent",
+    border: "0px",
+  },
+  icon: {
+    color: "black",
+    cursor: "pointer",
+    marginTop: "16px",
+  },
+
+  form: {
+    marginLeft: "auto",
+    width: "inherit",
+    height: "inherit",
+    display: "inline-flex",
+    alignItems: "flex-start",
+    justifySelf: "center",
+    alignSelf: "center",
+  },
 }));
 
 const Explore = ({ Address, history, newAddress }) => {
-  const [formData, updateFormData] = useState(initialFormData);
+  const [formData, updateFormData] = useState(Address);
   const classes = useStyles();
-  const handleChangeText = async (addr) => {
-    const searchRes = newAddress(addr);
-    console.log(formData);
+  const handleChangeText = async (e) => {
+    e.preventDefault();
+    const address = e.target.elements.address.value.trim();
+    const searchRes = newAddress(address);
     updateFormData(searchRes);
-    console.log(formData);
   };
 
   return (
@@ -62,33 +62,39 @@ const Explore = ({ Address, history, newAddress }) => {
           <Redirect to="/Explore" />
         )}
 
-        <div className="address">
-          <AddressInput onTextChange={handleChangeText} />
+        <div className="addressWide">
+          <form onSubmit={handleChangeText} className={classes.form}>
+            <AddressInput text={Address.address} />
+
+            <button type="submit" className={classes.submit}>
+              <HiOutlineSearch size="40px" className={classes.icon} />
+            </button>
+          </form>
         </div>
 
         <div className="balance">
           <Typography component="h1" variant="h5">
-            <p key="bal">BALANCE: {formData.balance}</p>
+            <p key="bal">Balance: {formData.balance}</p>
           </Typography>
         </div>
         <div className="createdAt">
           <Typography component="h1" variant="h5">
             <p key="date">
-              CREATED AT: {new Date(formData.createdAt).toUTCString()}
+              Created at: {new Date(formData.createdAt).toUTCString()}
             </p>
           </Typography>
         </div>
         <div className="TransactionsOUT">
           <Typography component="h1" variant="h5">
-            <p key="transac">TRANSACTIONS SENT:</p>
+            <p key="transac">Transfer:</p>
             {formData.transactions.map((transaction, move) => {
               return (
                 <p key={move}>
-                  TO ADDRESS: {transaction.to}
+                  To address: {transaction.to}
                   <br></br>
-                  BALANCE: {transaction.howMany}
+                  Amount: {transaction.howMany}
                   <br></br>
-                  DATE: {new Date(transaction.when).toUTCString()}
+                  Date: {new Date(transaction.when).toUTCString()}
                 </p>
               );
             })}
@@ -96,15 +102,15 @@ const Explore = ({ Address, history, newAddress }) => {
         </div>
         <div className="TransactionsIN">
           <Typography component="h1" variant="h5">
-            <p key="transacIN">TRANSACTIONS RECEIVED:</p>
+            <p key="transacIN">Deposit:</p>
             {formData.transactionsIn.map((transaction, move) => {
               return (
                 <p key={move}>
-                  FROM ADDRESS: {transaction.from}
+                  From address: {transaction.from}
                   <br></br>
-                  BALANCE: {transaction.howMany}
+                  Amount: {transaction.howMany}
                   <br></br>
-                  DATE: {new Date(transaction.when).toUTCString()}
+                  Date: {new Date(transaction.when).toUTCString()}
                 </p>
               );
             })}

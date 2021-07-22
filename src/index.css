@@ -1,15 +1,24 @@
-html, body{
-  min-height:100%;
-} 
+html,
 body {
-  font: 14px sans-serif;
-  background: #4DA0B0;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom, #D39D38, #4DA0B0);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom, #D39D38, #4DA0B0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ 
-}; 
+  min-height: 100%;
+}
+body {
+  font: 16px sans-serif;
+  background: #4da0b0; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to bottom,
+    #d39d38,
+    #4da0b0
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #d39d38,
+    #4da0b0
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 
-
-ol, ul {
+ol,
+ul {
   padding-left: 30px;
 }
 
@@ -59,9 +68,7 @@ ol, ul {
   margin-left: 20px;
 }
 
-
 .Login {
-
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -76,62 +83,60 @@ ol, ul {
 }
 
 .button-custom {
-  background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+  background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
   border: 0;
   border-radius: 3px;
-  box-shadow: 0 3px 5px 2px rgba(255, 105, 135, .3);
+  box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
   color: white;
   height: 48;
   padding: 0 30px;
 }
-
-
 
 /*EXPLORE*/
 /*https://grid.layoutit.com/*/
 .explore_container {
   margin: 5%;
   display: grid;
-  grid-template-columns: .5fr .5fr;
-  grid-template-rows: 80px 80px 80px 80px;
+  grid-template-columns: 0.5fr 0.5fr;
+  grid-template-rows: 90px 80px 80px 80px;
   grid-auto-rows: 1fr;
   gap: 0px 0px;
   grid-auto-flow: row;
   justify-content: center;
-  align-content: space-between;
   justify-items: center;
-  align-items: center;
+
+  align-content: space-around;
+
   grid-template-areas:
-    "address address"
+    "addressWide addressWide"
     "balance balance"
     "createdAt createdAt"
     "TransactionsIN TransactionsOUT";
-
 }
 
-
 .TransactionsIN {
-  justify-self: center; 
+  justify-self: center;
   align-self: start;
-  grid-area: TransactionsIN; 
+  grid-area: TransactionsIN;
   overflow: auto;
   height: 340px;
 }
 .TransactionsOUT {
   justify-self: center;
-  align-self: start; 
-  grid-area: TransactionsOUT; 
+  align-self: start;
+  grid-area: TransactionsOUT;
   overflow: auto;
   height: 340px;
 }
 
-.createdAt { grid-area: createdAt; }
+.createdAt {
+  grid-area: createdAt;
+}
 
-
-
-
-
-
+.addressWide {
+  width: 470px;
+  grid-area: addressWide;
+}
 
 /*MODAL_TRANFER*/
 
@@ -151,41 +156,37 @@ ol, ul {
     "msg msg"
     "SumbmitButton SumbmitButton";
 
-    width: 450px;
-    height: auto;
+  width: 450px;
+  height: auto;
 
   position: absolute;
   top: 50%;
   left: 50%;
   -ms-transform: translateX(-50%) translateY(-50%);
-  -webkit-transform: translate(-50%,-50%);
-  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 
-
-  background: linear-gradient(to bottom, #D39D38, #4DA0B0);
+  background: linear-gradient(to bottom, #d39d38, #4da0b0);
   border: 1px solid #3f51b5;
   transform: translate(-50%, -50%);
   border-radius: 10px;
 
-    padding: 25px;
-
+  padding: 25px;
 }
 
 .Transfer {
-
   justify-self: start;
   align-self: start;
   grid-area: Transfer;
 }
 
 .B {
-  justify-self: end; 
-  align-self: start; 
-  grid-area: B; 
+  justify-self: end;
+  align-self: start;
+  grid-area: B;
 }
 
 .balance {
-
   justify-self: center;
   grid-area: balance;
 }
@@ -197,13 +198,11 @@ ol, ul {
 }
 
 .balanceToSend {
-
   justify-self: center;
   grid-area: balanceToSend;
 }
 
 .SumbmitButton {
-
   justify-self: end;
   align-self: end;
   grid-area: SumbmitButton;
@@ -214,13 +213,7 @@ ol, ul {
   grid-area: msg;
 }
 
-
-
-
-
-.header
-{
-  
+.header {
   position: fixed;
   left: 0;
   right: 0;
@@ -228,8 +221,7 @@ ol, ul {
   height: 65px;
   background-color: darkslategrey;
   border-bottom: 2px solid #ffd400e0;
-  
+
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-
 }

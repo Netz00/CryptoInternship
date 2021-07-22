@@ -6,12 +6,11 @@ import Container from "@material-ui/core/Container";
 import Cookies from "universal-cookie";
 import { HiOutlineLogout } from "react-icons/hi";
 
-
 import { withRouter, Redirect } from "react-router-dom";
 
-import ModalTransfer from "./ModalTransfer";
+import ModalTransfer from "./modals/ModalTransfer";
 
-import ModalMint from "./ModalMint";
+import ModalMint from "./modals/ModalMint";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -20,23 +19,22 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
   },
- 
+
   submit: {
-    margin: theme.spacing(1,1),
+    margin: theme.spacing(1, 1),
     background: "transparent",
-    border:"0px"
+    border: "0px",
   },
-  icon:{
+  icon: {
     color: "black",
     cursor: "pointer",
   },
 
-  form:{
+  form: {
     marginLeft: "auto",
     width: "fit-content",
     height: "fit-content",
-}
-  
+  },
 }));
 
 const Dashboard = ({
@@ -69,17 +67,12 @@ const Dashboard = ({
       ) : (
         <Redirect to="/Dashboard" />
       )}
-      
+
       <div className="header">
-        <form onSubmit={handleLogoutSubmit}  className={classes.form}>
-          <button
-            type="submit"
-            className={classes.submit}
-          >
-                      <HiOutlineLogout size="40px" className={classes.icon}/>
-
+        <form onSubmit={handleLogoutSubmit} className={classes.form}>
+          <button type="submit" className={classes.submit}>
+            <HiOutlineLogout size="40px" className={classes.icon} />
           </button>
-
         </form>
       </div>
 
@@ -88,10 +81,12 @@ const Dashboard = ({
         <p key="bal">BALANCE: {Address.balance}</p>
         <br></br>
         <ModalTransfer Address={Address} handleSubmit={handleTransfer} />
-<br></br>
+        <br></br>
         <ModalMint Address={Address} handleMint={handleMint} />
         <br></br>
-        <Button variant="contained" color="primary" onClick={handleExplore}>Explore</Button>
+        <Button variant="contained" color="primary" onClick={handleExplore}>
+          Explore
+        </Button>
       </div>
     </Container>
   );
