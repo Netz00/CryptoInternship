@@ -4,7 +4,6 @@ import { useState } from "react";
 const ethereum_address = require("ethereum-address");
 
 function AddressInput({ text, onTextChange }) {
-
   const [formData, updateFormData] = useState({
     address: text,
     addressValid: true,
