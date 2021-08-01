@@ -3,7 +3,8 @@ import Dashboard from "./components/Dashboard";
 import Copyright from "./components/Copyright";
 import Explore from "./components/Explore";
 
-import "./index.css";
+import useWeb3 from "./useWeb3";
+import { useStoreApi } from "./storeApi";
 
 import { useState, useEffect } from "react";
 
@@ -52,6 +53,13 @@ const App = () => {
     localStorage.setItem("BlockChain", JSON.stringify(AddrHistory));
   }, [AddrHistory]);
 
+
+
+  if (typeof window.ethereum !== 'undefined') {
+    console.log('MetaMask is installed!');
+  }
+
+  
   //cookies logic...
   if (!ethereum_address.isAddress(CurrentUser.address)) {
     const cookies = new Cookies();
@@ -84,6 +92,48 @@ const App = () => {
     }
   }
 
+
+
+
+//https://github.com/PiotrNap/YouTube-channel-source-code/blob/374a09136b302983248245284af130be4d347d34/React-metamask-intro/src/App.js
+  const { balance, address, message, setAddress, setBalance } = useStoreApi();
+  const web3 = useWeb3();
+
+  // get user account on button click
+  const getUserAccount = async () => {
+    if (window.ethereum) {
+      try {
+        await window.ethereum.enable();
+        web3.eth.getAccounts().then(accounts => {
+          setAddress(accounts[0]);
+          updateBalance(accounts[0]);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      alert("Metamask extensions not detected!");
+    }
+  };
+
+  const updateBalance = async fromAddress => {
+    await web3.eth.getBalance(fromAddress).then(value => {
+      setBalance(web3.utils.fromWei(value, "ether"));
+    });
+  };
+
+  const sendTransaction = async (to, bal) => {
+    const amount = bal;
+    const recipient = to;
+    await web3.eth.sendTransaction({
+      from: address,
+      to: recipient,
+      value: web3.utils.toWei(amount, "ether")
+    });
+    updateBalance(address);
+  };
+
+
   //minting
   const handleMint = (bal) => {
     const tempHistory = AddrHistory.map((element) => {
@@ -101,11 +151,14 @@ const App = () => {
       return element;
     });
     ADD_Address(tempHistory);
+
     return true;
   };
 
   //transfer funds
   const handleTransfer = (to, bal) => {
+    sendTransaction(to, bal);
+
     let success = false;
     bal = bal * 1;
     const tempHistory = AddrHistory.map((element) => {
@@ -201,6 +254,8 @@ const App = () => {
     }
 
     SetUSer(user);
+
+    getUserAccount();
   };
 
   const newAddress = (addr) => {
