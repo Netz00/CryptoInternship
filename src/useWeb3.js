@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-
+import MyContract from './contracts/build/contracts/myERC20.json'; //truffle project dirs
+const tokenABI=MyContract.abi;
 const useWeb3 = () => {
   const [web3, setWeb3] = useState(null);
+  const[tokenInst,setTokenInst]=useState(null);
+
 
   useEffect(() => {
     var instance;
@@ -21,8 +24,9 @@ const useWeb3 = () => {
       instance = new Web3(provider);
     }
     setWeb3(instance);
+    setTokenInst(new instance.eth.Contract(tokenABI, "0xb50DF3DA0ee5B00A27340a009ccE03Abd47FdA5A"));
   }, []);
-  return web3;
+  return {web3,tokenInst};
 };
 
 export default useWeb3;

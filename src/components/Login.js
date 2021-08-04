@@ -5,9 +5,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Cookies from "universal-cookie";
-import AddressInput from "./inputs/AddressInput";
-
 import PropTypes from "prop-types";
 
 import { withRouter, Redirect } from "react-router-dom";
@@ -32,33 +29,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ethereum_address = require("ethereum-address");
 
-const Login = ({ onLoginSuccess, history, CurrentUser }) => {
+const Login = ({ getUserAccount, history, address }) => {
   const classes = useStyles();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const address = e.target.elements.address.value.trim();
-
-    if (ethereum_address.isAddress(address)) {
-      const cookies = new Cookies();
-
-      onLoginSuccess(address);
-      cookies.set("address", address, { path: "/" });
-
+      getUserAccount();
       history.push("/Dashboard");
-    } else {
-      e.preventDefault();
-    }
-
-    //redirect user to / where cookie will be inspected, and if valid redirect him to homepage
-  };
+    };
 
   return (
     <Container component="main" maxWidth="sm">
-      {CurrentUser.address === "" ? (
+      {address === null ? (
         <Redirect to="/" />
       ) : (
         <Redirect to="/Dashboard" />
@@ -76,7 +59,6 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
           action="/Dashboard"
           onSubmit={handleSubmit}
         >
-          <AddressInput />
           <Button
             type="submit"
             fullWidth
@@ -84,7 +66,7 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Sign In with Metamsk
           </Button>
         </form>
       </div>
@@ -93,7 +75,7 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
 };
 
 Login.propTypes = {
-  onLoginSuccess: PropTypes.func.isRequired,
+  getUserAccount: PropTypes.func.isRequired,
 };
 
 export default withRouter(Login);

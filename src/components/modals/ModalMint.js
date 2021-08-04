@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModalMint = ({ Address, handleMint }) => {
+const ModalMint = ({ balance, handleMint }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [errorMsg, updateErrorMsg] = useState("");
@@ -83,7 +83,7 @@ const ModalMint = ({ Address, handleMint }) => {
             </div>
 
             <div className="balance simple-modal-description">
-              <p>Current balance: {Address.balance}</p>
+              <p>Current balance: {balance}</p>
             </div>
 
             <div className="address simple-modal-description"></div>

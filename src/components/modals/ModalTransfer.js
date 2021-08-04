@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModalTransfer = ({ Address, handleSubmit }) => {
+const ModalTransfer = ({ address, balance, handleSubmit }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [errorMsg, updateErrorMsg] = useState("");
@@ -39,15 +39,16 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
 
   const onSumbit = (e) => {
     e.preventDefault();
-    const address = e.target.elements.address.value.trim();
+    const _address = e.target.elements.address.value.trim();
     const bal = e.target.elements.NumericInput.value.trim();
 
     if (bal * 1 === 0) updateErrorMsg("Pick value >0 to send.");
-    else if (address === Address.address)
+    else if (_address === address)
       updateErrorMsg("This address belongs to you.");
-    else if (!handleSubmit(address, bal))
-      updateErrorMsg("Insufficient balance.");
-    else updateErrorMsg("Success");
+    //else if (!handleSubmit(_address, bal))
+      //updateErrorMsg("Insufficient balance.");
+    //else updateErrorMsg("Success");
+    else handleSubmit(_address, bal);
   };
 
   return (
@@ -76,7 +77,7 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
             </div>
 
             <div className="balance simple-modal-description">
-              <p>Current balance: {Address.balance}</p>
+              <p>Current balance: {balance}</p>
             </div>
 
             <div className="address simple-modal-description">

@@ -12,6 +12,10 @@ import ModalTransfer from "./modals/ModalTransfer";
 
 import ModalMint from "./modals/ModalMint";
 
+
+import { useStoreApi } from "../storeApi";
+
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(10),
@@ -38,17 +42,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard = ({
-  Address,
-  AddrHistory,
   history,
   handleMint,
-  handleTransfer,
+  handleTransfer
 }) => {
   const classes = useStyles();
   const cookies = new Cookies();
 
-  console.log("adresa: " + Address.address);
-  console.log(AddrHistory);
+  const { balance, address, message, setAddress, setBalance } = useStoreApi();
+
+
+
+  console.log("adresa: " + address);
 
   const handleLogoutSubmit = (e) => {
     //e.preventDefault();
@@ -62,7 +67,7 @@ const Dashboard = ({
 
   return (
     <Container id="body2" component="main" maxWidth="sm">
-      {Address.address === "" ? (
+      {address === null ? (
         <Redirect to="/" />
       ) : (
         <Redirect to="/Dashboard" />
@@ -77,12 +82,12 @@ const Dashboard = ({
       </div>
 
       <div className={classes.paper}>
-        <p key="addr">ADDRESS: {Address.address}</p>
-        <p key="bal">BALANCE: {Address.balance}</p>
+        <p key="addr">ADDRESS: {address}</p>
+        <p key="bal">BALANCE: {balance}</p>
         <br></br>
-        <ModalTransfer Address={Address} handleSubmit={handleTransfer} />
+        <ModalTransfer address={address} balance={balance} handleSubmit={handleTransfer} />
         <br></br>
-        <ModalMint Address={Address} handleMint={handleMint} />
+        <ModalMint balance={balance} handleMint={handleMint} />
         <br></br>
         <Button variant="contained" color="primary" onClick={handleExplore}>
           Explore
@@ -93,7 +98,7 @@ const Dashboard = ({
 };
 
 Dashboard.propTypes = {
-  Address: PropTypes.object.isRequired,
+  address: PropTypes.string.isRequired,
 };
 
 export default withRouter(Dashboard);

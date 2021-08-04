@@ -33,14 +33,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Explore = ({ Address, history, newAddress }) => {
-  const [formData, updateFormData] = useState(Address);
+const Explore = ({ address, balance, history, newSearch }) => {
   const classes = useStyles();
   const handleChangeText = async (e) => {
     e.preventDefault();
-    const address = e.target.elements.address.value.trim();
-    const searchRes = newAddress(address);
-    updateFormData(searchRes);
+    const _address = e.target.elements.address.value.trim();
+    newSearch(_address);
   };
 
   return (
@@ -56,7 +54,7 @@ const Explore = ({ Address, history, newAddress }) => {
       </div>
 
       <div className="explore_container">
-        {Address.address === "" ? (
+        {address === null ? (
           <Redirect to="/" />
         ) : (
           <Redirect to="/Explore" />
@@ -64,20 +62,35 @@ const Explore = ({ Address, history, newAddress }) => {
 
         <div className="addressWide">
           <form onSubmit={handleChangeText} className={classes.form}>
-            <AddressInput text={Address.address} />
+            <AddressInput text={address} />
 
             <button type="submit" className={classes.submit}>
               <HiOutlineSearch size="40px" className={classes.icon} />
             </button>
           </form>
         </div>
-
         <div className="balance">
           <Typography component="h1" variant="h5">
-            <p key="bal">Balance: {formData.balance}</p>
+            <p key="bal">Balance: {balance}</p>
           </Typography>
         </div>
         <div className="createdAt">
+          
+        </div>
+        <div className="TransactionsOUT">
+       
+        </div>
+        <div className="TransactionsIN">
+         
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default withRouter(Explore);
+/**
+ *  <div className="createdAt">
           <Typography component="h1" variant="h5">
             <p key="date">
               Created at: {new Date(formData.createdAt).toUTCString()}
@@ -118,7 +131,4 @@ const Explore = ({ Address, history, newAddress }) => {
         </div>
       </div>
     </>
-  );
-};
-
-export default withRouter(Explore);
+ */
