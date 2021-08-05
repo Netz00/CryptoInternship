@@ -57,8 +57,6 @@ const Dashboard = ({
 
   const handleLogoutSubmit = (e) => {
     //e.preventDefault();
-    cookies.remove("address");
-    //history.push("/");
   };
 
   const handleExplore = (e) => {

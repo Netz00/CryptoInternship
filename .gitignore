@@ -6,6 +6,7 @@
 .pnp.js
 
 /src/contracts/build
+/src/contracts/secret
 
 # testing
 /coverage

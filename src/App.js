@@ -103,7 +103,7 @@ const App = () => {
   return (
     <Router>
       <div id="main" className="App">
-        {address === null ? <Redirect to="/" /> : <Redirect to="/Dashboard" />}
+        {WEB3 === null ? <Redirect to="/" /> : <Redirect to="/Dashboard" />}
 
         <Switch>
           <Route exact path="/">
