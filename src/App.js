@@ -6,7 +6,7 @@ import Explore from "./components/Explore";
 import useWeb3 from "./useWeb3";
 import { useStoreApi } from "./storeApi";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import {
   BrowserRouter as Router,
@@ -17,7 +17,9 @@ import {
 
 const App = () => {
   //https://github.com/PiotrNap/YouTube-channel-source-code/blob/374a09136b302983248245284af130be4d347d34/React-metamask-intro/src/App.js
-  const { balance, address, message, setAddress, setBalance } = useStoreApi();
+  //const { balance, address, message, setAddress, setBalance } = useStoreApi();
+  const {  address, setAddress, setBalance } = useStoreApi();
+
   const [searchRes, setResultBalance] = useState(0);
 
   const WEB3 = useWeb3();

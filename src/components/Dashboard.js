@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Cookies from "universal-cookie";
 import { HiOutlineLogout } from "react-icons/hi";
 
 import { withRouter, Redirect } from "react-router-dom";
@@ -47,9 +46,8 @@ const Dashboard = ({
   handleTransfer
 }) => {
   const classes = useStyles();
-  const cookies = new Cookies();
 
-  const { balance, address, message, setAddress, setBalance } = useStoreApi();
+  const { balance, address } = useStoreApi();
 
 
 

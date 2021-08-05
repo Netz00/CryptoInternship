@@ -1,6 +1,5 @@
 import { withRouter, Redirect } from "react-router-dom";
 import AddressInput from "./inputs/AddressInput";
-import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { HiBackspace, HiOutlineSearch } from "react-icons/hi";
