@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+#/src/contracts/build bcs we need myERC20.json for ABI
+/src/contracts/secret
+
 # testing
 /coverage
 
