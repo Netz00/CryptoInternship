@@ -5,8 +5,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Cookies from "universal-cookie";
-import AddressInput from "./inputs/AddressInput";
 
 import PropTypes from "prop-types";
 
@@ -29,45 +27,26 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
     borderRadius: 3,
     border: 0,
-    color: 'white',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: "white",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
 }));
 
-const ethereum_address = require("ethereum-address");
-
-const Login = ({ onLoginSuccess, history, CurrentUser }) => {
+const Login = ({ getUserAccount, history, address }) => {
   const classes = useStyles();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const address = e.target.elements.address.value.trim();
-
-    if (ethereum_address.isAddress(address)) {
-      const cookies = new Cookies();
-
-      onLoginSuccess(address);
-      cookies.set("address", address, { path: "/" });
-
-      history.push("/Dashboard");
-    } else {
-      e.preventDefault();
-    }
-
-    //redirect user to / where cookie will be inspected, and if valid redirect him to homepage
+    getUserAccount();
+    history.push("/Dashboard");
   };
 
   return (
     <Container component="main" maxWidth="sm">
-      {CurrentUser.address === "" ? (
-        <Redirect to="/" />
-      ) : (
-        <Redirect to="/Dashboard" />
-      )}
+      {address !== null && <Redirect to="/Dashboard" />}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -81,7 +60,6 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
           action="/Dashboard"
           onSubmit={handleSubmit}
         >
-          <AddressInput />
           <Button
             type="submit"
             fullWidth
@@ -98,7 +76,7 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
 };
 
 Login.propTypes = {
-  onLoginSuccess: PropTypes.func.isRequired,
+  getUserAccount: PropTypes.func.isRequired,
 };
 
 export default withRouter(Login);

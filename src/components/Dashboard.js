@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Cookies from "universal-cookie";
 import { HiOutlineLogout } from "react-icons/hi";
 
 import { withRouter, Redirect } from "react-router-dom";
@@ -11,6 +10,7 @@ import { withRouter, Redirect } from "react-router-dom";
 import ModalTransfer from "./modals/ModalTransfer";
 
 import ModalMint from "./modals/ModalMint";
+import { useStoreApi } from "../storeApi";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     fontSize: "initial",
 
-    color:"aliceblue",
-    fontFamily:"cursive",
+    color: "aliceblue",
+    fontFamily: "cursive",
 
     background: "#121212",
     width: "fit-content",
@@ -45,59 +45,47 @@ const useStyles = makeStyles((theme) => ({
     width: "fit-content",
     height: "fit-content",
   },
-  btn:{
+  btn: {
     margin: "8px",
 
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
     borderRadius: 3,
     border: 0,
-    color: 'white',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: "white",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
 }));
 
-const Dashboard = ({
-  Address,
-  AddrHistory,
-  history,
-  handleMint,
-  handleTransfer,
-}) => {
+const Dashboard = ({ history, handleMint, handleTransfer }) => {
   const classes = useStyles();
-  const cookies = new Cookies();
 
-  const { balance, address,ethBalance } = useStoreApi();
-
+  const { balance, address, ethBalance } = useStoreApi();
 
 
-  console.log("adresa: " + address);
 
-  const handleLogoutSubmit = (e) => {
-    //e.preventDefault();
-    cookies.remove("address");
-    //history.push("/");
-  };
-
-  const handleExplore = (e) => {
-    history.push("/Explore");
-  };
 
   return (
     <Container id="body2" component="main" maxWidth="sm">
-      {Address.address === "" ? (
-        <Redirect to="/" />
-      ) : (
-        <Redirect to="/Dashboard" />
-      )}
+      {address === null && <Redirect to="/" />}
 
       <div className="header">
-
-      <ModalTransfer address={address} balance={balance} handleSubmit={handleTransfer} />
-      <ModalMint balance={balance} handleMint={handleMint} />
-      <Button variant="contained" color="secondary" className={classes.btn} onClick={handleExplore}>
+        <ModalTransfer
+          address={address}
+          balance={balance}
+          handleSubmit={handleTransfer}
+        />
+        <ModalMint balance={balance} handleMint={handleMint} />
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.btn}
+          onClick={() => {
+            history.push("/Explore");
+          }}
+        >
           Explore
         </Button>
-        <form onSubmit={handleLogoutSubmit} className={classes.form}>
+        <form action="/" className={classes.form}>
           <button type="submit" className={classes.submit}>
             <HiOutlineLogout size="40px" className={classes.icon} />
           </button>
@@ -106,8 +94,8 @@ const Dashboard = ({
 
       <div className={classes.paper}>
         <p key="addr">ADDRESS: {address}</p>
-        <p key="ethBal">ETH BALANCE: {ethBalance}</p>
-        <p key="bal">TOKEN BALANCE: {balance}</p>
+        <p key="ethBal">ETH balance: {ethBalance}</p>
+        <p key="bal">AYM token balance: {balance}</p>
       </div>
     </Container>
   );

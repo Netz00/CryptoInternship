@@ -33,18 +33,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Explore = ({ address, history, newSearch }) => {
-  const [balance, setBalance] = useState([0,0]);
+  const [balance, setBalance] = useState([0, 0]);
   const classes = useStyles();
   const handleChangeText = async (e) => {
     e.preventDefault();
     const _address = e.target.elements.address.value.trim();
-    const res= await newSearch(_address);
-    setBalance([res.eth,res.tkn]);
+    const res = await newSearch(_address);
+    setBalance([res.eth, res.tkn]);
   };
-
 
   return (
     <>
+      {address === "" && <Redirect to="/" />}
+
       <div className="header">
         <HiBackspace
           size="40px"
@@ -56,15 +57,9 @@ const Explore = ({ address, history, newSearch }) => {
       </div>
 
       <div className="explore_container">
-        {Address.address === "" ? (
-          <Redirect to="/" />
-        ) : (
-          <Redirect to="/Explore" />
-        )}
-
         <div className="addressWide">
           <form onSubmit={handleChangeText} className={classes.form}>
-            <AddressInput text={Address.address} />
+            <AddressInput text={address} />
 
             <button type="submit" className={classes.submit}>
               <HiOutlineSearch size="40px" className={classes.icon} />
@@ -74,11 +69,21 @@ const Explore = ({ address, history, newSearch }) => {
 
         <div className="balance">
           <Typography component="h1" variant="h5">
-            <p key="ethBal">ETH BALANCE: {balance[0]}</p>
-        <p key="bal">TOKEN BALANCE: {balance[1]}</p>
+            <p key="ethBal">ETH balance: {balance[0]}</p>
+            <p key="bal">AYM token balance: {balance[1]}</p>
           </Typography>
         </div>
-        <div className="createdAt">
+        <div className="createdAt"></div>
+        <div className="TransactionsOUT"></div>
+        <div className="TransactionsIN"></div>
+      </div>
+    </>
+  );
+};
+
+export default withRouter(Explore);
+
+/**  <div className="createdAt">
           <Typography component="h1" variant="h5">
             <p key="date">
               Created at: {new Date(formData.createdAt).toUTCString()}
@@ -117,9 +122,4 @@ const Explore = ({ address, history, newSearch }) => {
             })}
           </Typography>
         </div>
-      </div>
-    </>
-  );
-};
-
-export default withRouter(Explore);
+      </div> */

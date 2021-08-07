@@ -26,21 +26,20 @@ const useStyles = makeStyles((theme) => ({
   },
   submitButton: {
     cursor: "pointer",
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
     borderRadius: 3,
     border: 0,
-    color: 'white',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: "white",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
-  btn:{
+  btn: {
     margin: "8px",
 
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
     borderRadius: 3,
     border: 0,
-    color: 'white',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-
+    color: "white",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
 }));
 
@@ -55,20 +54,28 @@ const ModalTransfer = ({ address, balance, handleSubmit }) => {
   const onSumbit = (e) => {
     e.preventDefault();
     const _address = e.target.elements.address.value.trim();
-    const bal = e.target.elements.NumericInput.value.trim();
-
-    if (bal * 1 === 0) updateErrorMsg("Pick value >0 to send.");
+    const bal = e.target.elements.NumericInput.value.trim()*1;
+   
+    if (bal  === 0) updateErrorMsg("Pick value >0 to send.");
     else if (_address === address)
       updateErrorMsg("This address belongs to you.");
-    //else if (!handleSubmit(_address, bal))
-      //updateErrorMsg("Insufficient balance.");
-    //else updateErrorMsg("Success");
-    else handleSubmit(_address, bal);
+    else if (balance < bal) updateErrorMsg("Insufficient balance.");
+    else {
+      updateErrorMsg("Metamask opening...");
+      handleSubmit(_address, bal);
+    }
   };
+
+
 
   return (
     <>
-      <Button variant="contained" color="secondary" className={classes.btn} onClick={openModal} >
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.btn}
+        onClick={openModal}
+      >
         Transfer
       </Button>
 

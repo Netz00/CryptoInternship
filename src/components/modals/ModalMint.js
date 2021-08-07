@@ -25,20 +25,20 @@ const useStyles = makeStyles((theme) => ({
   },
   submitButton: {
     cursor: "pointer",
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
     borderRadius: 3,
     border: 0,
-    color: 'white',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: "white",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
-  btn:{
+  btn: {
     margin: "8px",
 
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
     borderRadius: 3,
     border: 0,
-    color: 'white',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: "white",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
 }));
 
@@ -47,33 +47,26 @@ const ModalMint = ({ balance, handleMint }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [errorMsg, updateErrorMsg] = useState("");
 
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   const handleMintSubmit = (e) => {
     e.preventDefault();
 
-    const bal = e.target.elements.NumericInput.value.trim()*1;
+    const bal = e.target.elements.NumericInput.value.trim() * 1;
 
-    if (bal === 0) 
-      updateErrorMsg("Pick value >0 to send.");
-
-    else if (!handleMint(bal))
-      updateErrorMsg("Error.");
-
-    else 
-      updateErrorMsg("Success");
-      
+    if (bal === 0) updateErrorMsg("Pick value >0 to send.");
+    else handleMint(bal);
   };
 
   return (
     <>
-      <Button variant="contained" color="secondary" className={classes.btn} onClick={openModal}>
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.btn}
+        onClick={openModal}
+      >
         Mint
       </Button>
 
