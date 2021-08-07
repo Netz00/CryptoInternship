@@ -5,10 +5,13 @@ import Explore from "./components/Explore";
 
 import "./index.css";
 
+<<<<<<< Updated upstream
 import { useState, useEffect } from "react";
 
 import Cookies from "universal-cookie";
 
+=======
+>>>>>>> Stashed changes
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,6 +19,7 @@ import {
   Redirect,
 } from "react-router-dom";
 
+<<<<<<< Updated upstream
 const ethereum_address = require("ethereum-address");
 
 //stores information about entire "blockhain"
@@ -41,6 +45,13 @@ const initialUser = Object.freeze({
     },*/
   ],
 });
+=======
+const App = () => {
+  //https://github.com/PiotrNap/YouTube-channel-source-code/blob/374a09136b302983248245284af130be4d347d34/React-metamask-intro/src/App.js
+  //const { balance, address, message, setAddress, setBalance } = useStoreApi();
+  const {  address, setAddress, setBalance } = useStoreApi();
+  const WEB3 = useWeb3();
+>>>>>>> Stashed changes
 
 const App = () => {
   const [AddrHistory, ADD_Address] = useState(
@@ -84,6 +95,7 @@ const App = () => {
     }
   }
 
+<<<<<<< Updated upstream
   //minting
   const handleMint = (bal) => {
     const tempHistory = AddrHistory.map((element) => {
@@ -102,6 +114,25 @@ const App = () => {
     });
     ADD_Address(tempHistory);
     return true;
+=======
+  const updateBalance = async (fromAddress) => {
+    //eth balance
+
+    let ethBalance,tokenBalance;
+     await WEB3.web3.eth.getBalance(fromAddress).then(value => {
+      ethBalance=WEB3.web3.utils.fromWei(value, "ether");
+    });
+
+    //erc20 token balance
+    await WEB3.tokenInst.methods
+      .balanceOf(fromAddress)
+      .call()
+      .then(function (bal) {
+        tokenBalance= WEB3.web3.utils.fromWei(bal, "ether");
+      });
+      console.log({eth:ethBalance,tkn:tokenBalance});
+      setBalance({eth:ethBalance,tkn:tokenBalance});
+>>>>>>> Stashed changes
   };
 
   //transfer funds
@@ -174,6 +205,7 @@ const App = () => {
     }
   };
 
+<<<<<<< Updated upstream
   //after successful login add new address if it doesn't exist
   const onLoginSuccess = (addr) => {
     var addressExists = false;
@@ -199,6 +231,34 @@ const App = () => {
 
       ADD_Address([...AddrHistory, user]);
     }
+=======
+  const getUserBalance = async (fromAddress) => {
+
+//eth balance
+let ethBalance,tokenBalance;
+await WEB3.web3.eth.getBalance(fromAddress).then(value => {
+ ethBalance=WEB3.web3.utils.fromWei(value, "ether");
+});
+
+//erc20 token balance
+await WEB3.tokenInst.methods
+ .balanceOf(fromAddress)
+ .call()
+ .then(function (bal) {
+   tokenBalance= WEB3.web3.utils.fromWei(bal, "ether");
+ });
+ console.log({eth:ethBalance,tkn:tokenBalance});
+
+
+      return {eth:ethBalance,tkn:tokenBalance};
+  };
+
+  const handleMint = async (bal) => {
+    bal = bal + "";
+    await WEB3.tokenInst.methods
+      .mint(address, WEB3.web3.utils.toWei(bal, "ether"))
+      .send({ from: address });
+>>>>>>> Stashed changes
 
     SetUSer(user);
   };
@@ -252,7 +312,14 @@ const App = () => {
           </Route>
 
           <Route path="/Explore">
+<<<<<<< Updated upstream
             <Explore newAddress={newAddress} Address={CurrentUser} />
+=======
+            <Explore
+              newSearch={getUserBalance}
+              address={address}
+            />
+>>>>>>> Stashed changes
           </Route>
         </Switch>
 

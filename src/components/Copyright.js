@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TITLE = "ScamTrade";
+const TITLE = "AYM";
 
 const Copyright = () => {
   const classes = useStyles();

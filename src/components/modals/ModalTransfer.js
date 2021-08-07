@@ -26,6 +26,21 @@ const useStyles = makeStyles((theme) => ({
   },
   submitButton: {
     cursor: "pointer",
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    borderRadius: 3,
+    border: 0,
+    color: 'white',
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  },
+  btn:{
+    margin: "8px",
+
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    borderRadius: 3,
+    border: 0,
+    color: 'white',
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+
   },
 }));
 
@@ -51,8 +66,8 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
   };
 
   return (
-    <div>
-      <Button variant="contained" color="primary" onClick={openModal}>
+    <>
+      <Button variant="contained" color="secondary" className={classes.btn} onClick={openModal} >
         Transfer
       </Button>
 
@@ -103,7 +118,7 @@ const ModalTransfer = ({ Address, handleSubmit }) => {
           </div>
         </form>
       </Modal>
-    </div>
+    </>
   );
 };
 
