@@ -4,7 +4,6 @@ import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { HiBackspace, HiOutlineSearch } from "react-icons/hi";
-import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   back: {
@@ -33,16 +32,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-<<<<<<< Updated upstream
-const Explore = ({ Address, history, newAddress }) => {
-  const [formData, updateFormData] = useState(Address);
-  const classes = useStyles();
-  const handleChangeText = async (e) => {
-    e.preventDefault();
-    const address = e.target.elements.address.value.trim();
-    const searchRes = newAddress(address);
-    updateFormData(searchRes);
-=======
 const Explore = ({ address, history, newSearch }) => {
   const [balance, setBalance] = useState([0,0]);
   const classes = useStyles();
@@ -51,7 +40,6 @@ const Explore = ({ address, history, newSearch }) => {
     const _address = e.target.elements.address.value.trim();
     const res= await newSearch(_address);
     setBalance([res.eth,res.tkn]);
->>>>>>> Stashed changes
   };
 
 
@@ -86,12 +74,8 @@ const Explore = ({ address, history, newSearch }) => {
 
         <div className="balance">
           <Typography component="h1" variant="h5">
-<<<<<<< Updated upstream
-            <p key="bal">Balance: {formData.balance}</p>
-=======
             <p key="ethBal">ETH BALANCE: {balance[0]}</p>
         <p key="bal">TOKEN BALANCE: {balance[1]}</p>
->>>>>>> Stashed changes
           </Typography>
         </div>
         <div className="createdAt">

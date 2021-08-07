@@ -89,11 +89,7 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
             color="primary"
             className={classes.submit}
           >
-<<<<<<< Updated upstream
-            Sign In
-=======
             Sign In with Metamask
->>>>>>> Stashed changes
           </Button>
         </form>
       </div>

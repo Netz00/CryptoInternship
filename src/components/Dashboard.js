@@ -66,16 +66,11 @@ const Dashboard = ({
   const classes = useStyles();
   const cookies = new Cookies();
 
-<<<<<<< Updated upstream
-  console.log("adresa: " + Address.address);
-  console.log(AddrHistory);
-=======
   const { balance, address,ethBalance } = useStoreApi();
 
 
 
   console.log("adresa: " + address);
->>>>>>> Stashed changes
 
   const handleLogoutSubmit = (e) => {
     //e.preventDefault();
@@ -110,33 +105,16 @@ const Dashboard = ({
       </div>
 
       <div className={classes.paper}>
-<<<<<<< Updated upstream
-        <p key="addr">ADDRESS: {Address.address}</p>
-        <p key="bal">BALANCE: {Address.balance}</p>
-        <br></br>
-        <ModalTransfer Address={Address} handleSubmit={handleTransfer} />
-        <br></br>
-        <ModalMint Address={Address} handleMint={handleMint} />
-        <br></br>
-        <Button variant="contained" color="primary" onClick={handleExplore}>
-          Explore
-        </Button>
-=======
         <p key="addr">ADDRESS: {address}</p>
         <p key="ethBal">ETH BALANCE: {ethBalance}</p>
         <p key="bal">TOKEN BALANCE: {balance}</p>
->>>>>>> Stashed changes
       </div>
     </Container>
   );
 };
 
 Dashboard.propTypes = {
-<<<<<<< Updated upstream
-  Address: PropTypes.object.isRequired,
-=======
   address: PropTypes.string,
->>>>>>> Stashed changes
 };
 
 export default withRouter(Dashboard);
