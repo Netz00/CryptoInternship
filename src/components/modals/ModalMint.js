@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
   btn: {
-    margin: "8px",
+    margin: theme.spacing(2, 2, 2),
 
     background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
     borderRadius: 3,

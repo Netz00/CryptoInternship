@@ -73,9 +73,6 @@ const Explore = ({ address, history, newSearch }) => {
             <p key="bal">AYM token balance: {balance[1]}</p>
           </Typography>
         </div>
-        <div className="createdAt"></div>
-        <div className="TransactionsOUT"></div>
-        <div className="TransactionsIN"></div>
       </div>
     </>
   );

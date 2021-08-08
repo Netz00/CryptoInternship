@@ -4,68 +4,19 @@ body {
 }
 body {
   font: 16px sans-serif;
-  background: #4da0b0; /* fallback for old browsers */
+  background: #12c2e9; /* fallback for old browsers */
   background: -webkit-linear-gradient(
-    to bottom,
-    #d39d38,
-    #4da0b0
+    to right,
+    #f64f59,
+    #c471ed,
+    #12c2e9
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
-    to bottom,
-    #d39d38,
-    #4da0b0
+    to right,
+    #f64f59,
+    #c471ed,
+    #12c2e9
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-ol,
-ul {
-  padding-left: 30px;
-}
-
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
-}
-
-.status {
-  margin-bottom: 10px;
-}
-
-.square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 50px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 40px;
-  align-items: center;
-  justify-content: center;
-}
-
-.square:focus {
-  outline: none;
-}
-
-.kbd-navigation .square:focus {
-  background: #ddd;
-}
-
-.game {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.game-info {
-  margin-left: 20px;
 }
 
 .Login {
@@ -95,10 +46,10 @@ ul {
 /*EXPLORE*/
 /*https://grid.layoutit.com/*/
 .explore_container {
-  margin: 5%;
+  margin: 10%;
   display: grid;
   grid-template-columns: 0.5fr 0.5fr;
-  grid-template-rows: 90px 80px 80px 80px;
+  grid-template-rows: 100px 100px;
   grid-auto-rows: 1fr;
   gap: 0px 0px;
   grid-auto-flow: row;
@@ -110,31 +61,10 @@ ul {
   grid-template-areas:
     "addressWide addressWide"
     "balance balance"
-    "createdAt createdAt"
-    "TransactionsIN TransactionsOUT";
-}
-
-.TransactionsIN {
-  justify-self: center;
-  align-self: start;
-  grid-area: TransactionsIN;
-  overflow: auto;
-  height: 340px;
-}
-.TransactionsOUT {
-  justify-self: center;
-  align-self: start;
-  grid-area: TransactionsOUT;
-  overflow: auto;
-  height: 340px;
-}
-
-.createdAt {
-  grid-area: createdAt;
 }
 
 .addressWide {
-  width: 470px;
+  width: 480px;
   grid-area: addressWide;
 }
 
@@ -166,7 +96,19 @@ ul {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 
-  background: linear-gradient(to bottom, #d39d38, #4da0b0);
+  background: #12c2e9; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #f64f59,
+    #c471ed,
+    #12c2e9
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #f64f59,
+    #c471ed,
+    #12c2e9
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   border: 1px solid #3f51b5;
   transform: translate(-50%, -50%);
   border-radius: 10px;
@@ -190,8 +132,6 @@ ul {
   justify-self: center;
   grid-area: balance;
 
-
-  
   background: #121212;
   width: fit-content;
   height: fit-content;
@@ -199,13 +139,8 @@ ul {
   padding-left: 20px;
   padding-right: 20px;
 
-
-  
-  color:aliceblue;
-  font-family:cursive;
-
-
-
+  color: aliceblue;
+  font-family: cursive;
 }
 
 .address {
