@@ -20,7 +20,8 @@ const useWeb3 = () => {
     } else {
       // fallback on localhost provider
       const provider = new Web3.provider.HttpProvider(
-        "https://ropsten.infura.io/v3/f70dbabf3a324ede815b26eee5b9365e"
+        //"https://ropsten.infura.io/v3/f70dbabf3a324ede815b26eee5b9365e"
+        "http://127.0.0.1:8545"
       );
       instance = new Web3(provider);
     }
@@ -28,7 +29,7 @@ const useWeb3 = () => {
     setTokenInst(
       new instance.eth.Contract(
         tokenABI,
-        "0x50df9a120c8608381C55f533AEc9Af158F92bfE2"
+        "0xB0B18fBdd343c3088a4a35C9C4CDdE064C4B775d"
       )
     );
   }, []);
