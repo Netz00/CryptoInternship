@@ -60,7 +60,7 @@ body {
 
   grid-template-areas:
     "addressWide addressWide"
-    "balance balance"
+    "balance balance";
 }
 
 .addressWide {
@@ -178,3 +178,101 @@ body {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+
+
+
+
+
+.errorMsg {
+  color: #bf1650;
+}
+
+.errorMsg::before {
+  display: inline;
+  content: "⚠ ";
+}
+
+.inputTkn {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid white;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.labelTkn {
+  line-height: 1;
+  text-align: left;
+  display: block;
+  margin-bottom: 13px;
+  margin-top: 20px;
+  color: white;
+  font-size: 14px;
+  font-weight: 200;
+}
+
+
+.generate_token_parent {
+  display: block;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+
+.make_token_container {
+
+  background: #121212;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+
+    max-width: 500px;
+    margin: 0 auto;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 10px;
+
+  display: inline-grid;
+  margin: 5%;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: 90px 90px 90px 80px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 30px 0px;
+  grid-auto-flow: row;
+  justify-content: center;
+  align-content: space-between;
+  justify-items: center;
+  align-items: center;
+  grid-template-areas:
+    "token__name"
+    "token_symbol"
+    "max_supply"
+    "submit";
+  width: 50%;
+  height: 60%;
+}
+
+.token__name {
+  align-self: start;
+  grid-area: token__name;
+}
+.token_symbol {
+  align-self: start;
+  grid-area: token_symbol;
+}
+.max_supply {
+  align-self: start;
+  grid-area: max_supply;
+}
+.submit {
+  align-self: center;
+  grid-area: submit;
+}
+
+
+

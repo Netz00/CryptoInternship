@@ -47,6 +47,7 @@ module.exports = {
       port: 8545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
      },
+     /*
      rinkeby: {
       provider: function() { 
        return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/f70dbabf3a324ede815b26eee5b9365e");
@@ -55,7 +56,7 @@ module.exports = {
       gas: 4500000,
       gasPrice: 10000000000,
   }
- 
+ */
     // Another network with more advanced options...
     // advanced: {
     // port: 8777,             // Custom port
@@ -68,7 +69,8 @@ module.exports = {
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
 
-    /*
+    
+    //truffle migrate --network ropsten
      ropsten: {
      provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/f70dbabf3a324ede815b26eee5b9365e`),
      network_id: 3,       // Ropsten's id
@@ -77,7 +79,7 @@ module.exports = {
      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
      },
-*/
+
 
     // Useful for private networks
     // private: {

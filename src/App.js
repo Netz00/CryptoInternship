@@ -2,6 +2,7 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Copyright from "./components/Copyright";
 import Explore from "./components/Explore";
+import CreateToken from "./components/CreateToken";
 import useWeb3 from "./useWeb3";
 import { useStoreApi } from "./storeApi";
 
@@ -121,6 +122,12 @@ const App = () => {
           <Route path="/Explore">
             <Explore newSearch={getUserBalance} address={address} />
           </Route>
+
+          <Route path="/create-token">
+            <CreateToken address={address} />
+          </Route>
+
+
         </Switch>
 
         <Copyright />

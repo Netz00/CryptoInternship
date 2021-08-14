@@ -85,6 +85,18 @@ const Dashboard = ({ history, handleMint, handleTransfer }) => {
         >
           Explore
         </Button>
+
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.btn}
+          onClick={() => {
+            history.push("/create-token");
+          }}
+        >
+          Create new token
+        </Button>
+
         <form action="/" className={classes.form}>
           <button type="submit" className={classes.submit}>
             <HiOutlineLogout size="40px" className={classes.icon} />
