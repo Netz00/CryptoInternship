@@ -56,12 +56,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard = ({ history, handleMint, handleTransfer }) => {
+const Dashboard = ({ history, handleMint, handleTransfer,tokens, changeToken,token }) => {
   const classes = useStyles();
 
-  const { balance, address, ethBalance } = useStoreApi();
-
-
+  const {  address, ethBalance } = useStoreApi();
 
 
   return (
@@ -71,10 +69,10 @@ const Dashboard = ({ history, handleMint, handleTransfer }) => {
       <div className="header">
         <ModalTransfer
           address={address}
-          balance={balance}
+          token={token}
           handleSubmit={handleTransfer}
         />
-        <ModalMint balance={balance} handleMint={handleMint} />
+        <ModalMint token={token} handleMint={handleMint} />
         <Button
           variant="contained"
           color="secondary"
@@ -107,8 +105,26 @@ const Dashboard = ({ history, handleMint, handleTransfer }) => {
       <div className={classes.paper}>
         <p key="addr">ADDRESS: {address}</p>
         <p key="ethBal">ETH balance: {ethBalance}</p>
-        <p key="bal">AYM token balance: {balance}</p>
+        {token && <p key="bal">{token.symbol} token balance: {token.balance}</p>}
       </div>
+
+<div className="tokens">
+{
+  tokens.map(item=> {
+  return (<Button
+    key={item.token_address}
+    variant="contained"
+    color="secondary"
+    className={classes.btn}
+    onClick={()=>changeToken(item.token_address)}
+    >
+  {item.token_symbol}
+  </Button>);
+  })
+}
+
+</div>
+
     </Container>
   );
 };

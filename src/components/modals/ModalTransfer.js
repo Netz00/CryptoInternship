@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModalTransfer = ({ address, balance, handleSubmit }) => {
+const ModalTransfer = ({ address, token, handleSubmit }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [errorMsg, updateErrorMsg] = useState("");
@@ -55,11 +55,12 @@ const ModalTransfer = ({ address, balance, handleSubmit }) => {
     e.preventDefault();
     const _address = e.target.elements.address.value.trim();
     const bal = e.target.elements.NumericInput.value.trim()*1;
-   
-    if (bal  === 0) updateErrorMsg("Pick value >0 to send.");
+    
+    if(token===undefined)updateErrorMsg("Which token???");
+    else if (bal  === 0) updateErrorMsg("Pick value >0 to send.");
     else if (_address === address)
       updateErrorMsg("This address belongs to you.");
-    else if (balance < bal) updateErrorMsg("Insufficient balance.");
+    else if (token.balance < bal) updateErrorMsg("Insufficient balance.");
     else {
       updateErrorMsg("Metamask opening...");
       handleSubmit(_address, bal);
@@ -99,7 +100,7 @@ const ModalTransfer = ({ address, balance, handleSubmit }) => {
             </div>
 
             <div className="balance simple-modal-description">
-              <p>Current balance: {balance}</p>
+            {token? <p>Current balance: {token.balance} {token.symbol}</p>:<p>Pick token first</p>}
             </div>
 
             <div className="address simple-modal-description">

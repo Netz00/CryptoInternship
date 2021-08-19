@@ -69,7 +69,7 @@ module.exports = {
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
 
-    
+    /*
     //truffle migrate --network ropsten
      ropsten: {
      provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/f70dbabf3a324ede815b26eee5b9365e`),
@@ -79,7 +79,7 @@ module.exports = {
      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
      },
-
+*/
 
     // Useful for private networks
     // private: {

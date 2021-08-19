@@ -1,12 +1,14 @@
 /*const SimpleContract = artifacts.require("myERC20");
 const amount = 10000;
 
-const _name = "AEY";
-const _symbol = "AEY";
+const name = "AEY";
+const symbol = "AEY";
+const maximum_supply=10000000;
+
 contract("SimpleContract", (accounts) => {
   let instance;
   beforeEach("should setup the contract instance", async () => {
-    instance = await SimpleContract.new(_name,_symbol);
+    instance = await SimpleContract.new(name,symbol,maximum_supply);
   });
 
   it(`owners should mint ${amount} AYM in his account`, async () => {

@@ -30,7 +30,7 @@ const useWeb3 = () => {
     setTokenInst(
       new instance.eth.Contract(
         tokenABI,
-        "0x158718E72084f578E49133cD85310dC8a556F041"
+        "0xB9104b93C56f1905Fa2AaF417EBA4D1d00Df2C98"
       )
     );
   }, []);

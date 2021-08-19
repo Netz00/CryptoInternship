@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
 }));
-const CreateToken = ({ address, history }) => {
+const CreateToken = ({ address, history,makeNewToken }) => {
   const classes = useStyles();
 
   const {
@@ -32,12 +32,13 @@ const CreateToken = ({ address, history }) => {
   });
 
   const onSubmit = (data) => {
-    alert(JSON.stringify(data));
+    //alert(JSON.stringify(data));
+    makeNewToken(data.tokenName,data.tokenSymbol,data.maxSupply);
     //create new token
     //save token in the firebase
   };
 
-  console.log(errors);
+  //console.log(errors);
 
   return (
     <>
@@ -80,7 +81,7 @@ const CreateToken = ({ address, history }) => {
           </div>
           <div className="token_symbol">
             <label className="labelTkn" htmlFor="tokenSymbol">
-              Last Name
+              Token symbol
             </label>
             <input
               className="inputTkn"
@@ -101,7 +102,7 @@ const CreateToken = ({ address, history }) => {
 
           <div className="max_supply">
             <label className="labelTkn" htmlFor="maxSupply">
-              Token name
+              Max supply
             </label>
 
             <input

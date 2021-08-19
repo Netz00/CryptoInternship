@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModalMint = ({ balance, handleMint }) => {
+const ModalMint = ({ token, handleMint }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [errorMsg, updateErrorMsg] = useState("");
@@ -54,8 +54,8 @@ const ModalMint = ({ balance, handleMint }) => {
     e.preventDefault();
 
     const bal = e.target.elements.NumericInput.value.trim() * 1;
-
-    if (bal === 0) updateErrorMsg("Pick value >0 to send.");
+    if(token===undefined)updateErrorMsg("Which token???");
+    else if (bal === 0) updateErrorMsg("Pick value >0 to send.");
     else handleMint(bal);
   };
 
@@ -90,7 +90,7 @@ const ModalMint = ({ balance, handleMint }) => {
             </div>
 
             <div className="balance simple-modal-description">
-              <p>Current balance: {balance}</p>
+             {token? <p>Current balance: {token.balance} {token.symbol}</p>:<p>Pick token first</p>}
             </div>
 
             <div className="address simple-modal-description"></div>
