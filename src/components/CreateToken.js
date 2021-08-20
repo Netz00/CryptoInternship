@@ -2,8 +2,9 @@ import { withRouter, Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { HiBackspace } from "react-icons/hi";
 import Button from "@material-ui/core/Button";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   back: {
@@ -19,9 +20,14 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
+  circularProgress: {
+    color: "white",
+  },
 }));
-const CreateToken = ({ address, history,makeNewToken }) => {
+const CreateToken = ({ address, history, makeNewToken }) => {
   const classes = useStyles();
+
+  const [wait, setWait] = useState(false);
 
   const {
     register,
@@ -31,11 +37,21 @@ const CreateToken = ({ address, history,makeNewToken }) => {
     mode: "onChange",
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     //alert(JSON.stringify(data));
-    makeNewToken(data.tokenName,data.tokenSymbol,data.maxSupply);
+    console.log("Deploying contract...");
+    setWait(true);
+    const response = await makeNewToken(
+      data.tokenName,
+      data.tokenSymbol,
+      data.maxSupply
+    );
     //create new token
     //save token in the firebase
+    console.log(response);
+    console.log("Contract deployed!");
+    response && history.push("/Dashboard");
+    setWait(false);
   };
 
   //console.log(errors);
@@ -123,14 +139,18 @@ const CreateToken = ({ address, history,makeNewToken }) => {
             )}
           </div>
           <div className="submit">
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              className={classes.submitButton}
-            >
-              Create
-            </Button>
+            {wait ? (
+              <CircularProgress className={classes.circularProgress} />
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                className={classes.submitButton}
+              >
+                Create
+              </Button>
+            )}
           </div>
         </form>
       </div>

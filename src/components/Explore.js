@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Explore = ({ address, history, newSearch }) => {
-  const [balance, setBalance] = useState([0, 0]);
+  const [balance, setBalance] = useState([0, []]);
   const classes = useStyles();
   const handleChangeText = async (e) => {
     e.preventDefault();
@@ -69,8 +69,11 @@ const Explore = ({ address, history, newSearch }) => {
 
         <div className="balance">
           <Typography component="h1" variant="h5">
-            <p key="ethBal">ETH balance: {balance[0]}</p>
-            <p key="bal">AYM token balance: {balance[1]}</p>
+            <p key="ethBal">{balance[0]} ETH</p>
+            {balance[1]&&balance[1].map((token,index)=>{
+              return <p key={index}>{token.balance} {token.symbol}</p>;
+            })}
+            
           </Typography>
         </div>
       </div>

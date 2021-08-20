@@ -3,9 +3,10 @@ import React, { useReducer, useContext, createContext } from "react";
 const StoreContext = createContext();
 const initialState = {
   message: "",
-  balance: 0,
   ethBalance:0,
-  address: null
+  address: null,
+  token: null,
+  tokens:[],
 };
 
 const reducer = (state, action) => {
@@ -19,9 +20,18 @@ const reducer = (state, action) => {
     case "SET-BALANCE":
       return {
         ...state,
-        balance: action.balance.tkn,
-        ethBalance: action.balance.eth,
+        ethBalance: action.balance,
       };
+      case "SET-TOKEN":
+        return {
+          ...state,
+          token: action.token,
+        };
+        case "SET-TOKENS":
+          return {
+            ...state,
+            tokens: action.tokens,
+          };
     default:
       throw new Error(`Unknown type of action: ${action.type}`);
   }

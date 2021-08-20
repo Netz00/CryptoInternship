@@ -69,6 +69,7 @@ const Login = ({ getUserAccount, history, address }) => {
           >
             Sign In with Metamask
           </Button>
+          <p>This is production built so please select Ropsten test-net at your metamask wallet to avoid any unwanted expenses.</p>
         </form>
       </div>
     </Container>

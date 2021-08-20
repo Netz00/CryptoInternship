@@ -13,8 +13,6 @@ import {
   Redirect,
 } from "react-router-dom";
 
-import { useState } from "react";
-
 import MyContract from "./contracts/build/contracts/myERC20.json"; //truffle project dirs
 
 import firebase from "firebase/app";
@@ -37,12 +35,17 @@ var firebaseConfig = {
 
 const App = () => {
   //https://github.com/PiotrNap/YouTube-channel-source-code/blob/374a09136b302983248245284af130be4d347d34/React-metamask-intro/src/App.js
-  //const { balance, address, message, setAddress, setBalance } = useStoreApi();
-  const { address, setAddress, setBalance } = useStoreApi();
-  const WEB3 = useWeb3();
-
-  const [token, setToken] = useState();
-  const [state, setState] = useState([]);
+  //const { balance, address, message, setAddress, setBalance ,token, setToken, tokens, setTokens} = useStoreApi();
+  const {
+    address,
+    setAddress,
+    setBalance,
+    token,
+    setToken,
+    tokens,
+    setTokens,
+  } = useStoreApi();
+  const web3 = useWeb3();
 
   // Initialize Firebase
   if (!firebase.apps.length) {
@@ -59,7 +62,7 @@ const App = () => {
 
         let addr;
 
-        await WEB3.web3.eth.getAccounts().then((accounts) => {
+        await web3.eth.getAccounts().then((accounts) => {
           setAddress(accounts[0]);
           updateBalance(accounts[0]);
           addr = accounts[0];
@@ -81,32 +84,22 @@ const App = () => {
 
             for (let i = 0; i < contracts.length; i++) {
               const tokenAddress = contracts[i];
-              console.log(tokenAddress);
-
-              const token = await new WEB3.web3.eth.Contract(abi, tokenAddress);
-
-              const tokenName = await token.methods.name().call();
+              const token = await new web3.eth.Contract(abi, tokenAddress);
               const symbol = await token.methods.symbol().call();
-              const max_supp = await token.methods._maximumSupply().call();
 
               const contract = {
                 token_address: tokenAddress,
-                token_name: tokenName,
                 token_symbol: symbol,
-                token_max_supp: max_supp,
               };
               data.push(contract);
             }
-            setState(data);
+            setTokens(data);
           } else {
             console.log("No data available");
           }
         } catch (error) {
           console.error(error);
         }
-
-        //allow picking token
-        //token object now initialises every time before mintr/transfer, not with web3 anymore
       } catch (error) {
         console.error(error);
       }
@@ -116,15 +109,18 @@ const App = () => {
   };
 
   const changeToken = async (tokenAddress) => {
-    const token = await new WEB3.web3.eth.Contract(abi, tokenAddress);
+    const token = await new web3.eth.Contract(abi, tokenAddress);
 
     const tokenName = await token.methods.name().call();
     const symbol = await token.methods.symbol().call();
-    const max_supp = await token.methods._maximumSupply().call();
+    const max_supp = await token.methods
+      ._maximumSupply()
+      .call()
+      .then((bal) => web3.utils.fromWei(bal, "ether"));
     const balance = await token.methods
       .balanceOf(address)
       .call()
-      .then((bal) => WEB3.web3.utils.fromWei(bal, "ether"));
+      .then((bal) => web3.utils.fromWei(bal, "ether"));
 
     const contract = {
       address: tokenAddress,
@@ -137,42 +133,29 @@ const App = () => {
     setToken(contract);
   };
 
-  
   const updateBalance = async (fromAddress) => {
     //eth balance
-    let ethBalance, tokenBalance;
-    await WEB3.web3.eth.getBalance(fromAddress).then((value) => {
-      ethBalance = WEB3.web3.utils.fromWei(value, "ether");
-    });
+    const ethBalance = await web3.eth
+      .getBalance(fromAddress)
+      .then((value) => web3.utils.fromWei(value, "ether"));
 
-
-    tokenBalance="error";
-/*
-    //erc20 token balance
-    await WEB3.tokenInst.methods
-      .balanceOf(fromAddress)
-      .call()
-      .then(function (bal) {
-        tokenBalance = WEB3.web3.utils.fromWei(bal, "ether");
-      });*/
-
-    setBalance({ eth: ethBalance, tkn: tokenBalance });
+    setBalance(ethBalance);
   };
 
   const sendTransaction = async (to, bal) => {
     const amount = bal + "";
     const recipient = to;
     /*    ETH
-    await WEB3.web3.eth.sendTransaction({
+    await web3.eth.sendTransaction({
       from: address,
       to: recipient,
-      value: WEB3.web3.utils.toWei(amount, "ether")
+      value: web3.utils.toWei(amount, "ether")
     });
     updateBalance(address);
 */
 
     await token.instance.methods
-      .transfer(recipient, WEB3.web3.utils.toWei(amount, "ether"))
+      .transfer(recipient, web3.utils.toWei(amount, "ether"))
       .send({ from: address });
 
     updateBalance(address);
@@ -180,18 +163,14 @@ const App = () => {
 
   const getUserBalance = async (fromAddress) => {
     //eth balance
-    let ethBalance, tokenBalance;
+    let data = [];
 
-    await WEB3.web3.eth.getBalance(fromAddress).then((value) => {
-      ethBalance = WEB3.web3.utils.fromWei(value, "ether");
-    });
-
+    const ethBalance = await web3.eth
+      .getBalance(fromAddress)
+      .then((value) => web3.utils.fromWei(value, "ether"));
 
     //get all tokens stored in firebase
     //extract data for each token
-
-
-
 
     try {
       const snapshot = await firebase
@@ -200,43 +179,44 @@ const App = () => {
         .get();
       if (snapshot.exists()) {
         var contracts = [];
-        var data = [];
 
         snapshot.forEach(function (item) {
           item.forEach(function (item) {
-          item.forEach(function (item) {
-            const tokenAddress = item.val();
-            contracts.push(tokenAddress);
-          });});
+            item.forEach(function (item) {
+              const tokenAddress = item.val();
+              contracts.push(tokenAddress);
+            });
+          });
         });
 
         for (let i = 0; i < contracts.length; i++) {
           const tokenAddress = contracts[i];
 
-          const token = await new WEB3.web3.eth.Contract(abi, tokenAddress);
+          const token = await new web3.eth.Contract(abi, tokenAddress);
 
-          const tokenName = await token.methods.name().call();
+          //const tokenName = await token.methods.name().call();
           const symbol = await token.methods.symbol().call();
-          const max_supp = await token.methods._maximumSupply().call();
+          /*const max_supp = await token.methods
+            ._maximumSupply()
+            .call()
+            .then((bal) => web3.utils.fromWei(bal, "ether"));*/
           const balance = await token.methods
-          .balanceOf(fromAddress)
-          .call()
-          .then((bal) => WEB3.web3.utils.fromWei(bal, "ether"));
-    
-        const contract = {
-          address: tokenAddress,
-          name: tokenName,
-          symbol: symbol,
-          balance: balance,
-          max_supp: max_supp,
-          instance: token,
-          
-        };
+            .balanceOf(fromAddress)
+            .call()
+            .then((bal) => web3.utils.fromWei(bal, "ether"));
+
+          const contract = {
+            //address: tokenAddress,
+            //name: tokenName,
+            symbol: symbol,
+            balance: balance,
+            //max_supp: max_supp,
+            //instance: token,
+          };
           data.push(contract);
         }
-        console.log("data:");
+        
 
-console.log(data);
       } else {
         console.log("No data available");
       }
@@ -244,68 +224,79 @@ console.log(data);
       console.error(error);
     }
 
-
-    return { eth: ethBalance, tkn: tokenBalance };
+    return { eth: ethBalance, tkn: data };
   };
 
   const handleMint = async (bal) => {
     bal = bal + "";
-    await token.instance.methods
-      .mint(address, WEB3.web3.utils.toWei(bal, "ether"))
-      .send({ from: address });
 
-    updateBalance(address);
+    try {
+      await token.instance.methods
+        .mint(address, web3.utils.toWei(bal, "ether"))
+        .send({ from: address });
+
+      updateBalance(address);
+    } catch (error) {
+      console.log("error happened");
+      console.error(JSON.parse(JSON.stringify(error)));
+
+      console.error(JSON.parse(JSON.stringify(error.message)));
+    }
   };
 
   const makeNewToken = async (name, symbol, max_supp) => {
-    let deploy_contract = new WEB3.web3.eth.Contract(abi, address);
+    let deploy_contract = new web3.eth.Contract(abi, address);
     let account = address;
 
     // Function Parameter
     let payload = {
       data: bytecode,
-      arguments: [name, symbol, WEB3.web3.utils.toWei(max_supp, "ether")],
+      arguments: [name, symbol, web3.utils.toWei(max_supp, "ether")],
     };
 
     let parameter = {
       from: account,
-      //gas: WEB3.web3.utils.toHex(80000),
-      //gasPrice: WEB3.web3.utils.toHex(WEB3.web3.utils.toWei('30', 'gwei'))
+      //gas: web3.utils.toHex(80000),
+      //gasPrice: web3.utils.toHex(web3.utils.toWei('30', 'gwei'))
     };
 
     // Function Call
-    deploy_contract
+    return deploy_contract
       .deploy(payload)
       .send(parameter, (err, transactionHash) => {
         console.log("Transaction Hash :", transactionHash);
       })
       .on("confirmation", () => {})
-      .then((newContractInstance) => {
-        console.log(
-          "Deployed Contract Address : ",
-          newContractInstance.options.address
-        );
+      .then(
+        (newContractInstance) => {
+          console.log(
+            "Deployed Contract Address : ",
+            newContractInstance.options.address
+          );
 
-        setState([
-          ...state,
-          {
-            token_address: newContractInstance.options.address,
-            token_name: name,
-            token_symbol: symbol,
-            token_max_supp: max_supp,
-          },
-        ]);
+          setTokens([
+            ...tokens,
+            {
+              token_address: newContractInstance.options.address,
+              token_symbol: symbol,
+            },
+          ]);
 
-        //save token to firebase
+          //save token to firebase
 
-        // Create a new post reference with an auto-generated id
-        var postListRef = firebase
-          .database()
-          .ref(`usersAndContracts/${address}/contracts`);
+          // Create a new post reference with an auto-generated id
+          var postListRef = firebase
+            .database()
+            .ref(`usersAndContracts/${address}/contracts`);
 
-        var newPostRef = postListRef.push();
-        newPostRef.set(newContractInstance.options.address);
-      });
+          var newPostRef = postListRef.push();
+          newPostRef.set(newContractInstance.options.address);
+          return true;
+        },
+        (reason) => {
+          console.error(reason); // Error!
+          return false;
+        });
   };
 
   return (
@@ -322,9 +313,7 @@ console.log(data);
             <Dashboard
               handleMint={handleMint}
               handleTransfer={sendTransaction}
-              tokens={state}
               changeToken={changeToken}
-              token={token}
             />
           </Route>
 

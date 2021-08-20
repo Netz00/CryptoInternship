@@ -52,15 +52,21 @@ const useStyles = makeStyles((theme) => ({
     border: 0,
     color: "white",
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-
+  },
+  btn_selected: {
+    margin: theme.spacing(2, 2, 2),
+    background: "linear-gradient(45deg, #1E6B8B 30%, #FF8E53 90%)",
+    borderRadius: 3,
+    border: 0,
+    color: "white",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
 }));
 
-const Dashboard = ({ history, handleMint, handleTransfer,tokens, changeToken,token }) => {
+const Dashboard = ({ history, handleMint, handleTransfer, changeToken }) => {
   const classes = useStyles();
 
-  const {  address, ethBalance } = useStoreApi();
-
+  const { address, ethBalance, token, tokens } = useStoreApi();
 
   return (
     <Container id="body2" component="main" maxWidth="sm">
@@ -105,26 +111,42 @@ const Dashboard = ({ history, handleMint, handleTransfer,tokens, changeToken,tok
       <div className={classes.paper}>
         <p key="addr">ADDRESS: {address}</p>
         <p key="ethBal">ETH balance: {ethBalance}</p>
-        {token && <p key="bal">{token.symbol} token balance: {token.balance}</p>}
+        {token && (
+          <p key="bal">
+            {token.symbol} token balance: {token.balance}
+          </p>
+        )}
+        {token && (
+          <p key="bal">
+            {token.symbol} token name: {token.name}
+          </p>
+        )}
+        {token && (
+          <p key="bal">
+            {token.symbol} token max supply: {token.max_supp}
+          </p>
+        )}
       </div>
 
-<div className="tokens">
-{
-  tokens.map(item=> {
-  return (<Button
-    key={item.token_address}
-    variant="contained"
-    color="secondary"
-    className={classes.btn}
-    onClick={()=>changeToken(item.token_address)}
-    >
-  {item.token_symbol}
-  </Button>);
-  })
-}
-
-</div>
-
+      <div className="tokens">
+        {tokens.map((item) => {
+          return (
+            <Button
+              key={item.token_address}
+              variant="contained"
+              color="secondary"
+              className={
+                token && token.address === item.token_address
+                  ? classes.btn_selected
+                  : classes.btn
+              }
+              onClick={() => changeToken(item.token_address)}
+            >
+              {item.token_symbol}
+            </Button>
+          );
+        })}
+      </div>
     </Container>
   );
 };
