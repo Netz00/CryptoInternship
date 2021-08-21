@@ -1,10 +1,9 @@
 import { withRouter, Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { HiBackspace } from "react-icons/hi";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import SubmitButton from "./SubmitButton";
 
 const useStyles = makeStyles((theme) => ({
   back: {
@@ -24,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
 }));
+
 const CreateToken = ({ address, history, makeNewToken }) => {
   const classes = useStyles();
 
@@ -139,18 +139,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
             )}
           </div>
           <div className="submit">
-            {wait ? (
-              <CircularProgress className={classes.circularProgress} />
-            ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                className={classes.submitButton}
-              >
-                Create
-              </Button>
-            )}
+          <SubmitButton wait={wait} text="Create"/>
           </div>
         </form>
       </div>

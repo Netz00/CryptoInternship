@@ -24,7 +24,7 @@ const Copyright = () => {
         align="center"
       >
         {"Copyright © "}
-        <Link color="inherit" href="https://material-ui.com/">
+        <Link color="inherit" href="https://github.com/Netz00/BlankInternship">
           {TITLE}
         </Link>{" "}
         {new Date().getFullYear()}

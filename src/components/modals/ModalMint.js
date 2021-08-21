@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import { FaTimes } from "react-icons/fa";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
+import SubmitButton from "../SubmitButton";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,17 +24,8 @@ const useStyles = makeStyles((theme) => ({
     color: "red",
     cursor: "pointer",
   },
-  submitButton: {
-    cursor: "pointer",
-    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-    borderRadius: 3,
-    border: 0,
-    color: "white",
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-  },
   btn: {
     margin: theme.spacing(2, 2, 2),
-
     background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
     borderRadius: 3,
     border: 0,
@@ -46,17 +38,23 @@ const ModalMint = ({ token, handleMint }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [errorMsg, updateErrorMsg] = useState("");
+  const [wait, setWait] = useState(false);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
-  const handleMintSubmit = (e) => {
+  const handleMintSubmit = async (e) => {
     e.preventDefault();
 
     const bal = e.target.elements.NumericInput.value.trim() * 1;
-    if(token===undefined)updateErrorMsg("Which token???");
+    if (token === null) updateErrorMsg("Which token???");
     else if (bal === 0) updateErrorMsg("Pick value >0 to send.");
-    else handleMint(bal);
+    else {
+      setWait(true);
+      const res = await handleMint(bal);
+      !res && updateErrorMsg("Error happened check metamask for more info.");
+      setWait(false);
+    }
   };
 
   return (
@@ -90,7 +88,13 @@ const ModalMint = ({ token, handleMint }) => {
             </div>
 
             <div className="balance simple-modal-description">
-             {token? <p>Current balance: {token.balance} {token.symbol}</p>:<p>Pick token first</p>}
+              {token ? (
+                <p>
+                  Current balance: {token.balance} {token.symbol}
+                </p>
+              ) : (
+                <p>Pick token first</p>
+              )}
             </div>
 
             <div className="address simple-modal-description"></div>
@@ -103,14 +107,7 @@ const ModalMint = ({ token, handleMint }) => {
             </div>
 
             <div className="SumbmitButton simple-modal-description">
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                className={classes.submitButton}
-              >
-                Mint
-              </Button>
+              <SubmitButton wait={wait} text="Mint" />
             </div>
           </div>
         </form>

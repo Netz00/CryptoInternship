@@ -133,6 +133,19 @@ const App = () => {
     setToken(contract);
   };
 
+  const updateTokenBalance = async () => {
+    const balance = await token.instance.methods
+      .balanceOf(address)
+      .call()
+      .then((bal) => web3.utils.fromWei(bal, "ether"));
+
+    const contract = {
+      ...token,
+      balance: balance,
+    };
+    setToken(contract);
+  };
+
   const updateBalance = async (fromAddress) => {
     //eth balance
     const ethBalance = await web3.eth
@@ -153,12 +166,20 @@ const App = () => {
     });
     updateBalance(address);
 */
+    try {
+      await token.instance.methods
+        .transfer(recipient, web3.utils.toWei(amount, "ether"))
+        .send({ from: address });
 
-    await token.instance.methods
-      .transfer(recipient, web3.utils.toWei(amount, "ether"))
-      .send({ from: address });
+      updateBalance(address);
+      updateTokenBalance();
+      return true;
+    } catch (error) {
+      console.log("error happened");
+      console.error(error);
 
-    updateBalance(address);
+      return false;
+    }
   };
 
   const getUserBalance = async (fromAddress) => {
@@ -215,8 +236,6 @@ const App = () => {
           };
           data.push(contract);
         }
-        
-
       } else {
         console.log("No data available");
       }
@@ -236,11 +255,13 @@ const App = () => {
         .send({ from: address });
 
       updateBalance(address);
+      updateTokenBalance();
+      return true;
     } catch (error) {
       console.log("error happened");
-      console.error(JSON.parse(JSON.stringify(error)));
+      console.error(error);
 
-      console.error(JSON.parse(JSON.stringify(error.message)));
+      return false;
     }
   };
 
@@ -296,7 +317,8 @@ const App = () => {
         (reason) => {
           console.error(reason); // Error!
           return false;
-        });
+        }
+      );
   };
 
   return (

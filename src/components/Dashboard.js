@@ -110,20 +110,20 @@ const Dashboard = ({ history, handleMint, handleTransfer, changeToken }) => {
 
       <div className={classes.paper}>
         <p key="addr">ADDRESS: {address}</p>
-        <p key="ethBal">ETH balance: {ethBalance}</p>
+        <p key="ethBal">{ethBalance} ETH</p>
         {token && (
-          <p key="bal">
-            {token.symbol} token balance: {token.balance}
+          <p key="symb">
+            {token.balance} {token.symbol} 
           </p>
         )}
         {token && (
-          <p key="bal">
-            {token.symbol} token name: {token.name}
+          <p key="name">
+            {token.symbol} - {token.name}
           </p>
         )}
         {token && (
-          <p key="bal">
-            {token.symbol} token max supply: {token.max_supp}
+          <p key="maxSupp">
+            {token.symbol} max supply: {token.max_supp}
           </p>
         )}
       </div>
