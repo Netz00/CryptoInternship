@@ -76,7 +76,7 @@ const Dashboard = ({ history, handleMint, handleTransfer, changeToken }) => {
         <ModalTransfer
           address={address}
           token={token}
-          handleSubmit={handleTransfer}
+          handleTransfer={handleTransfer}
         />
         <ModalMint token={token} handleMint={handleMint} />
         <Button

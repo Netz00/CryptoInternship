@@ -1,4 +1,3 @@
-import NumericInput from "../inputs/NumericInput";
 import { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { FaTimes } from "react-icons/fa";
@@ -6,20 +5,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import SubmitButton from "../SubmitButton";
 
+import { useForm } from "react-hook-form";
+
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    height: "fit-content",
-    position: "relative",
-    width: 500,
-    backgroundColor: "#424242",
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    display: "inline-flex",
-  },
   exit: {
     color: "red",
     cursor: "pointer",
@@ -37,22 +25,43 @@ const useStyles = makeStyles((theme) => ({
 const ModalMint = ({ token, handleMint }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [errorMsg, updateErrorMsg] = useState("");
   const [wait, setWait] = useState(false);
 
+  const {
+    register,
+    setError,
+    formState: { errors },
+    handleSubmit,
+    clearErrors,
+  } = useForm({
+    mode: "onChange",
+  });
+
   const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const closeModal = () => {
+    clearErrors();
+    setIsOpen(false);
+  };
 
-  const handleMintSubmit = async (e) => {
-    e.preventDefault();
-
-    const bal = e.target.elements.NumericInput.value.trim() * 1;
-    if (token === null) updateErrorMsg("Which token???");
-    else if (bal === 0) updateErrorMsg("Pick value >0 to send.");
+  const handleMintSubmit = async (data) => {
+    const bal = data.balance * 1;
+    if (token === null)
+      setError("balance", {
+        type: "manual",
+        message: "Which token???",
+      });
     else {
       setWait(true);
       const res = await handleMint(bal);
-      !res && updateErrorMsg("Error happened check metamask for more info.");
+      res
+        ? setError("success", {
+            type: "manual",
+            message: "Completed.",
+          })
+        : setError("balance", {
+            type: "manual",
+            message: "Error happened check metamask for more info.",
+          });
       setWait(false);
     }
   };
@@ -74,39 +83,69 @@ const ModalMint = ({ token, handleMint }) => {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <form onSubmit={handleMintSubmit}>
-          <div className="container">
-            <div className="Transfer">
+        <form onSubmit={handleSubmit(handleMintSubmit)}>
+          <div class="mint_container">
+            <div class="Mint">
               <h2 id="simple-modal-title">Mint</h2>
             </div>
-            <div className="B">
+            <div class="close simple-modal-description">
               <FaTimes
                 className={classes.exit}
                 onClick={closeModal}
                 size="40px"
               />
             </div>
-
-            <div className="balance simple-modal-description">
+            <div class="balance simple-modal-description">
               {token ? (
                 <p>
-                  Current balance: {token.balance} {token.symbol}
+                  {token.balance} {token.symbol}
                 </p>
               ) : (
                 <p>Pick token first</p>
               )}
             </div>
-
-            <div className="address simple-modal-description"></div>
-            <div className="balanceToSend simple-modal-description">
-              <NumericInput />
+            <div class="max_supply simple-modal-description">
+              {token && (
+                <p>
+                  {token.max_supp} {token.symbol} MAX
+                </p>
+              )}
             </div>
 
-            <div className="msg">
-              <p>{errorMsg}</p>
-            </div>
+            <div class="input_balance simple-modal-description">
+              <label className="labelTkn" htmlFor="balance">
+                Balance
+              </label>
 
-            <div className="SumbmitButton simple-modal-description">
+              <input
+                className="inputTkn"
+                type="number"
+                step="any"
+                placeholder="Balance"
+                {...register("balance", {
+                  required: "this is a required",
+                  min: { value: 1, message: "Min value is 1" },
+                  maxLength: {
+                    value: 30,
+                    message: "Max length is 30",
+                  },
+                  pattern: {
+                    value: /^\d+(\.\d{0,8})?$/i,
+                    message: "8 decimals max",
+                  },
+                })}
+              />
+            </div>
+            <div class="error_msg simple-modal-description">
+              {errors.balance ? (
+                <p className="errorMsg">{errors.balance.message}</p>
+              ) : (
+                errors.success && (
+                  <p className="successMsg">{errors.success.message}</p>
+                )
+              )}
+            </div>
+            <div class="submit simple-modal-description">
               <SubmitButton wait={wait} text="Mint" />
             </div>
           </div>

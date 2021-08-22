@@ -71,60 +71,57 @@ body {
 /*MODAL_TRANFER*/
 
 .container {
-  display: grid;
-  grid-template-columns: 350px 50px;
-  grid-template-rows: 49px 43px 84px 50px 57px 50px;
-  gap: 7px 4px;
+  display: inline-grid;
+  grid-template-columns: 400px 60px;
+  grid-template-rows: 70px 50px 120px 90px 36px 50px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 10px 0px;
   grid-auto-flow: row;
   justify-content: center;
   align-content: space-around;
   grid-template-areas:
     "Transfer B"
-    "balance balance"
+    "balance ."
     "address address"
     "balanceToSend balanceToSend"
     "msg msg"
     "SumbmitButton SumbmitButton";
 
-  width: 450px;
+  width: 490px;
   height: auto;
 
   position: absolute;
   top: 50%;
   left: 50%;
+
+  max-width: 500px;
+  margin: 0 auto;
+  margin: 0 auto;
+  border-radius: 10px;
+
   -ms-transform: translateX(-50%) translateY(-50%);
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 
-  background: #12c2e9; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #f64f59,
-    #c471ed,
-    #12c2e9
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #f64f59,
-    #c471ed,
-    #12c2e9
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  border: 1px solid #3f51b5;
-  transform: translate(-50%, -50%);
-  border-radius: 10px;
+  color: aliceblue;
+  background: #121212;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
 
-  padding: 25px;
+  border-radius: 10px;
 }
 
 .Transfer {
-  justify-self: start;
-  align-self: start;
+  justify-self: center;
+  align-self: end;
   grid-area: Transfer;
 }
 
 .B {
-  justify-self: end;
-  align-self: start;
+  justify-self: center;
+  align-self: end;
   grid-area: B;
 }
 
@@ -144,7 +141,7 @@ body {
 }
 
 .address {
-  width: 400px;
+  min-width: 380px;
   justify-self: center;
   grid-area: address;
 }
@@ -156,7 +153,6 @@ body {
 
 .SumbmitButton {
   justify-self: end;
-  align-self: end;
   grid-area: SumbmitButton;
 }
 
@@ -188,10 +184,18 @@ body {
   content: "⚠ ";
 }
 
+.successMsg {
+  color: #16bf2d;
+}
+
+.successMsg::before {
+  display: inline;
+  content: "✅ ";
+}
+
 .inputTkn {
   display: block;
   box-sizing: border-box;
-  width: 100%;
   border-radius: 4px;
   border: 1px solid white;
   padding: 10px 15px;
@@ -265,5 +269,88 @@ body {
 }
 .submit {
   align-self: center;
+  grid-area: submit;
+}
+
+/*MINT*/
+.mint_container {
+  color: aliceblue;
+  background: #121212;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+
+  width: 400px;
+  height: auto;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-55%, -60%);
+
+  max-width: 400px;
+  margin: 0 auto;
+  margin: 0 auto;
+  border-radius: 10px;
+
+  display: inline-grid;
+
+  grid-template-columns: 300px 80px;
+  grid-template-rows: 65px 55px 56px 95px 40px 80px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 10px 0px;
+  grid-auto-flow: row;
+  justify-content: center;
+  align-content: space-between;
+  justify-items: center;
+  align-items: center;
+  grid-template-areas:
+    "Mint close"
+    "balance balance"
+    "max_supply max_supply"
+    "input_balance input_balance"
+    "error_msg error_msg"
+    ". submit";
+}
+
+.error_msg {
+  grid-area: error_msg;
+}
+
+.Mint {
+  justify-self: left;
+  margin-left: 15px;
+  grid-area: Mint;
+}
+
+.close {
+  justify-self: center;
+  align-self: end;
+  grid-area: close;
+}
+
+.max_supply {
+  grid-area: max_supply;
+  width: fit-content;
+  height: fit-content;
+}
+
+.input_balance {
+  grid-area: input_balance;
+  background: #121212;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  color: aliceblue;
+  align-self: start;
+  font-family: cursive;
+}
+
+.submit {
   grid-area: submit;
 }

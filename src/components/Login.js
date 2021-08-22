@@ -38,10 +38,11 @@ const useStyles = makeStyles((theme) => ({
 const Login = ({ getUserAccount, history, address }) => {
   const classes = useStyles();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    getUserAccount();
-    history.push("/Dashboard");
+    const res = await getUserAccount();
+
+    res && history.push("/Dashboard");
   };
 
   return (
@@ -57,7 +58,6 @@ const Login = ({ getUserAccount, history, address }) => {
         </Typography>
         <form
           className={classes.form}
-          action="/Dashboard"
           onSubmit={handleSubmit}
         >
           <Button
@@ -69,7 +69,7 @@ const Login = ({ getUserAccount, history, address }) => {
           >
             Sign In with Metamask
           </Button>
-          <p>This is production built so please select Ropsten test-net at your metamask wallet to avoid any unwanted expenses.</p>
+          <p>Please select Ropsten test-net at your metamask wallet to avoid any unwanted expenses.</p>
         </form>
       </div>
     </Container>

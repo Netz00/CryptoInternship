@@ -21,7 +21,6 @@ require("firebase/database");
 const abi = MyContract.abi;
 const bytecode = MyContract.bytecode;
 
-// Your web app's Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyAXs9virC0ONM8mSPokucpo2fEIj7ZGilg",
   authDomain: "blank-internship.firebaseapp.com",
@@ -94,6 +93,7 @@ const App = () => {
               data.push(contract);
             }
             setTokens(data);
+            return true;
           } else {
             console.log("No data available");
           }
@@ -106,6 +106,7 @@ const App = () => {
     } else {
       alert("Metamask extensions not detected!");
     }
+    return false;
   };
 
   const changeToken = async (tokenAddress) => {
@@ -282,43 +283,43 @@ const App = () => {
     };
 
     // Function Call
-    return deploy_contract
-      .deploy(payload)
-      .send(parameter, (err, transactionHash) => {
-        console.log("Transaction Hash :", transactionHash);
-      })
-      .on("confirmation", () => {})
-      .then(
-        (newContractInstance) => {
-          console.log(
-            "Deployed Contract Address : ",
-            newContractInstance.options.address
-          );
+    try {
+      const newContractInstance = await deploy_contract
+        .deploy(payload)
+        .send(parameter, (err, transactionHash) => {
+          console.log("Transaction Hash :", transactionHash);
+        })
+        .on("confirmation", () => {});
 
-          setTokens([
-            ...tokens,
-            {
-              token_address: newContractInstance.options.address,
-              token_symbol: symbol,
-            },
-          ]);
-
-          //save token to firebase
-
-          // Create a new post reference with an auto-generated id
-          var postListRef = firebase
-            .database()
-            .ref(`usersAndContracts/${address}/contracts`);
-
-          var newPostRef = postListRef.push();
-          newPostRef.set(newContractInstance.options.address);
-          return true;
-        },
-        (reason) => {
-          console.error(reason); // Error!
-          return false;
-        }
+      console.log(
+        "Deployed Contract Address : ",
+        newContractInstance.options.address
       );
+
+      setTokens([
+        ...tokens,
+        {
+          token_address: newContractInstance.options.address,
+          token_symbol: symbol,
+        },
+      ]);
+
+      //save token to firebase
+
+      // Create a new post reference with an auto-generated id
+      var postListRef = firebase
+        .database()
+        .ref(`usersAndContracts/${address}/contracts`);
+
+      var newPostRef = postListRef.push();
+      newPostRef.set(newContractInstance.options.address);
+      return true;
+    } catch (error) {
+      console.log("error happened");
+      console.error(error);
+
+      return false;
+    }
   };
 
   return (

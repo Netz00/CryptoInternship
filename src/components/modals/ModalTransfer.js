@@ -1,26 +1,14 @@
 import Button from "@material-ui/core/Button";
-import NumericInput from "../inputs/NumericInput";
 import { useState } from "react";
-import AddressInput from "../inputs/AddressInput";
 import { FaTimes } from "react-icons/fa";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import SubmitButton from "../SubmitButton";
+import { useForm } from "react-hook-form";
+
+const ethereum_address = require("ethereum-address");
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    height: "fit-content",
-    position: "relative",
-    width: 500,
-    backgroundColor: "#424242",
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    display: "inline-flex",
-  },
   exit: {
     color: "red",
     cursor: "pointer",
@@ -35,29 +23,64 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModalTransfer = ({ address, token, handleSubmit }) => {
+const ModalTransfer = ({ address, token, handleTransfer }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [errorMsg, updateErrorMsg] = useState("");
   const [wait, setWait] = useState(false);
 
+  const {
+    register,
+    setError,
+    formState: { errors },
+    handleSubmit,
+    clearErrors,
+  } = useForm({
+    mode: "onChange",
+  });
+
   const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const closeModal = () => {
+    clearErrors();
+    setIsOpen(false);
+  };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    const _address = e.target.elements.address.value.trim();
-    const bal = e.target.elements.NumericInput.value.trim() * 1;
+  const handleTransferSubmit = async (data) => {
+    const _address = data.address;
+    const bal = data.balance * 1;
 
-    if (token === null) updateErrorMsg("Which token???");
-    else if (bal === 0) updateErrorMsg("Pick value >0 to send.");
+    if (token === null)
+      setError("balance", {
+        type: "manual",
+        message: "Which token???",
+      });
     else if (_address === address)
-      updateErrorMsg("This address belongs to you.");
-    else if (token.balance < bal) updateErrorMsg("Insufficient balance.");
+      setError("address", {
+        type: "manual",
+        message: "This address belongs to you.",
+      });
+    else if (token.balance < bal)
+      setError("balance", {
+        type: "manual",
+        message: "Insufficient balance.",
+      });
+    else if (!ethereum_address.isAddress(address))
+      setError("address", {
+        type: "manual",
+        message: "Invalid etherium address.",
+      });
     else {
       setWait(true);
-      const res = await handleSubmit(_address, bal);
-      !res && updateErrorMsg("Error happened check metamask for more info.");
+      const res = await handleTransfer(_address, bal);
+      res
+        ? setError("success", {
+            type: "manual",
+            message: "Completed.",
+          })
+        : setError("balance", {
+            type: "manual",
+            message: "Error happened check metamask for more info.",
+          });
+
       setWait(false);
     }
   };
@@ -79,12 +102,12 @@ const ModalTransfer = ({ address, token, handleSubmit }) => {
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(handleTransferSubmit)}>
           <div className="container">
             <div className="Transfer">
               <h2 id="simple-modal-title">Transfer</h2>
             </div>
-            <div className="B">
+            <div className="B simple-modal-description">
               <FaTimes
                 className={classes.exit}
                 onClick={closeModal}
@@ -103,14 +126,68 @@ const ModalTransfer = ({ address, token, handleSubmit }) => {
             </div>
 
             <div className="address simple-modal-description">
-              <AddressInput />
+              <label className="labelTkn" htmlFor="address">
+                Address
+              </label>
+
+              <input
+                className="inputTkn"
+                type="text"
+                placeholder="Address"
+                {...register("address", {
+                  required: "this is a required",
+                  minLength: {
+                    value: 42,
+                    message: "Min length is 42",
+                  },
+                  maxLength: {
+                    value: 42,
+                    message: "Max length is 42",
+                  },
+                  pattern: {
+                    value: /^0x[a-fA-F0-9]{40}$/,
+                    message: "Invalid etherium address.",
+                  },
+                })}
+              />
+
+              {errors.address && (
+                <p className="errorMsg">{errors.address.message}</p>
+              )}
             </div>
             <div className="balanceToSend simple-modal-description">
-              <NumericInput />
+              <label className="labelTkn" htmlFor="balance">
+                Balance
+              </label>
+
+              <input
+                className="inputTkn"
+                type="number"
+                step="any"
+                placeholder="Balance"
+                {...register("balance", {
+                  required: "this is a required",
+                  min: { value: 1, message: "Min value is 1" },
+                  maxLength: {
+                    value: 30,
+                    message: "Max length is 30",
+                  },
+                  pattern: {
+                    value: /^\d+(\.\d{0,8})?$/i,
+                    message: "8 decimals max",
+                  },
+                })}
+              />
             </div>
 
             <div className="msg">
-              <p>{errorMsg}</p>
+              {errors.balance ? (
+                <p className="errorMsg">{errors.balance.message}</p>
+              ) : (
+                errors.success && (
+                  <p className="successMsg">{errors.success.message}</p>
+                )
+              )}
             </div>
 
             <div className="SumbmitButton simple-modal-description">

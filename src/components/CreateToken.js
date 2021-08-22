@@ -31,8 +31,10 @@ const CreateToken = ({ address, history, makeNewToken }) => {
 
   const {
     register,
+    setError,
     formState: { errors },
     handleSubmit,
+    clearErrors,
   } = useForm({
     mode: "onChange",
   });
@@ -41,17 +43,31 @@ const CreateToken = ({ address, history, makeNewToken }) => {
     //alert(JSON.stringify(data));
     console.log("Deploying contract...");
     setWait(true);
-    const response = await makeNewToken(
+    const res = await makeNewToken(
       data.tokenName,
       data.tokenSymbol,
       data.maxSupply
     );
     //create new token
     //save token in the firebase
-    console.log(response);
-    console.log("Contract deployed!");
-    response && history.push("/Dashboard");
+
+    console.log("res:" + res);
     setWait(false);
+    if (res) {
+      setError("success", {
+        type: "manual",
+        message: "Completed.",
+      });
+      setTimeout(() => {
+        clearErrors();
+        history.push("/Dashboard");
+      }, 800);
+    } else {
+      setError("maxSupply", {
+        type: "manual",
+        message: "Error happened check metamask for more info.",
+      });
+    }
   };
 
   //console.log(errors);
@@ -124,6 +140,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
             <input
               className="inputTkn"
               type="number"
+              step="any"
               placeholder="Max supply"
               {...register("maxSupply", {
                 required: "this is a required",
@@ -132,14 +149,22 @@ const CreateToken = ({ address, history, makeNewToken }) => {
                   value: 30,
                   message: "Max length is 30",
                 },
+                pattern: {
+                  value: /^\d+(\.\d{0,8})?$/i,
+                  message: "8 decimals max",
+                },
               })}
             />
-            {errors.maxSupply && (
+            {errors.maxSupply ? (
               <p className="errorMsg">{errors.maxSupply.message}</p>
+            ) : (
+              errors.success && (
+                <p className="successMsg">{errors.success.message}</p>
+              )
             )}
           </div>
           <div className="submit">
-          <SubmitButton wait={wait} text="Create"/>
+            <SubmitButton wait={wait} text="Create" />
           </div>
         </form>
       </div>
