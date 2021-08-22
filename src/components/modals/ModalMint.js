@@ -84,18 +84,18 @@ const ModalMint = ({ token, handleMint }) => {
         aria-describedby="simple-modal-description"
       >
         <form onSubmit={handleSubmit(handleMintSubmit)}>
-          <div class="mint_container">
-            <div class="Mint">
+          <div className="mint_container">
+            <div className="Mint">
               <h2 id="simple-modal-title">Mint</h2>
             </div>
-            <div class="close simple-modal-description">
+            <div className="close simple-modal-description">
               <FaTimes
                 className={classes.exit}
                 onClick={closeModal}
                 size="40px"
               />
             </div>
-            <div class="balance simple-modal-description">
+            <div className="balance simple-modal-description">
               {token ? (
                 <p>
                   {token.balance} {token.symbol}
@@ -104,7 +104,7 @@ const ModalMint = ({ token, handleMint }) => {
                 <p>Pick token first</p>
               )}
             </div>
-            <div class="max_supply simple-modal-description">
+            <div className="max_supply simple-modal-description">
               {token && (
                 <p>
                   {token.max_supp} {token.symbol} MAX
@@ -112,7 +112,7 @@ const ModalMint = ({ token, handleMint }) => {
               )}
             </div>
 
-            <div class="input_balance simple-modal-description">
+            <div className="input_balance simple-modal-description">
               <label className="labelTkn" htmlFor="balance">
                 Balance
               </label>
@@ -136,7 +136,7 @@ const ModalMint = ({ token, handleMint }) => {
                 })}
               />
             </div>
-            <div class="error_msg simple-modal-description">
+            <div className="error_msg simple-modal-description">
               {errors.balance ? (
                 <p className="errorMsg">{errors.balance.message}</p>
               ) : (
@@ -145,7 +145,7 @@ const ModalMint = ({ token, handleMint }) => {
                 )
               )}
             </div>
-            <div class="submit simple-modal-description">
+            <div className="submit simple-modal-description">
               <SubmitButton wait={wait} text="Mint" />
             </div>
           </div>

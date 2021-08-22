@@ -258,10 +258,10 @@ const App = () => {
       updateBalance(address);
       updateTokenBalance();
       return true;
-    } catch (error) {
+    } catch (err) {
       console.log("error happened");
-      console.error(error);
-
+      console.log(err);
+      console.log(JSON.parse(err.message.substring(15).trim()).message);
       return false;
     }
   };
