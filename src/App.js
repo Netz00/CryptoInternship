@@ -261,7 +261,7 @@ const App = () => {
     } catch (err) {
       console.log("error happened");
       console.log(err);
-      console.log(JSON.parse(err.message.substring(15).trim()).message);
+      //console.log(JSON.parse(err.message.substring(15).trim()).message);
       return false;
     }
   };

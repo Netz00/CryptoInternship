@@ -125,6 +125,12 @@ const ModalMint = ({ token, handleMint }) => {
                 {...register("balance", {
                   required: "this is a required",
                   min: { value: 1, message: "Min value is 1" },
+                  max: {
+                    value: token && token.max_supp - token.balance,
+                    message: `Max value is ${
+                      token && token.max_supp - token.balance
+                    }`,
+                  },
                   maxLength: {
                     value: 30,
                     message: "Max length is 30",
