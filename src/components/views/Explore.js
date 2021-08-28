@@ -1,5 +1,5 @@
 import { withRouter, Redirect } from "react-router-dom";
-import AddressInput from "./inputs/AddressInput";
+import AddressInput from "../inputs/AddressInput";
 import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -39,7 +39,7 @@ const Explore = ({ address, history, newSearch }) => {
     e.preventDefault();
     const _address = e.target.elements.address.value.trim();
     const res = await newSearch(_address);
-    setBalance([res.eth, res.tkn]);
+    setBalance([res.ethBalance, res.tknData]);
   };
 
   return (
@@ -70,10 +70,14 @@ const Explore = ({ address, history, newSearch }) => {
         <div className="balance">
           <Typography component="h1" variant="h5">
             <p key="ethBal">{balance[0]} ETH</p>
-            {balance[1]&&balance[1].map((token,index)=>{
-              return <p key={index}>{token.balance} {token.symbol}</p>;
-            })}
-            
+            {balance[1] &&
+              balance[1].map((token, index) => {
+                return (
+                  <p key={index}>
+                    {token.balance} {token.symbol}
+                  </p>
+                );
+              })}
           </Typography>
         </div>
       </div>

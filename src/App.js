@@ -1,8 +1,8 @@
-import Login from "./components/Login";
-import Dashboard from "./components/Dashboard";
+import Login from "./components/views/Login";
+import Dashboard from "./components/views/Dashboard";
 import Copyright from "./components/Copyright";
-import Explore from "./components/Explore";
-import CreateToken from "./components/CreateToken";
+import Explore from "./components/views/Explore";
+import CreateToken from "./components/views/CreateToken";
 import useWeb3 from "./useWeb3";
 import { useStoreApi } from "./storeApi";
 
@@ -56,6 +56,14 @@ const App = () => {
   // get user account on button click
   const getUserAccount = async () => {
     if (window.ethereum) {
+      if (window.ethereum.networkVersion !== "3") {
+        console.log(
+          window.ethereum.networkVersion,
+          "window.ethereum.networkVersion"
+        );
+        return "wrongNet";
+      }
+
       try {
         await window.ethereum.enable();
 
@@ -82,18 +90,18 @@ const App = () => {
             });
 
             for (let i = 0; i < contracts.length; i++) {
-              const tokenAddress = contracts[i];
-              const token = await new web3.eth.Contract(abi, tokenAddress);
-              const symbol = await token.methods.symbol().call();
+              const token_address = contracts[i];
+              const token = await new web3.eth.Contract(abi, token_address);
+              const token_symbol = await token.methods.symbol().call();
 
               const contract = {
-                token_address: tokenAddress,
-                token_symbol: symbol,
+                token_address,
+                token_symbol,
               };
               data.push(contract);
             }
             setTokens(data);
-            return true;
+            return "ok";
           } else {
             console.log("No data available");
           }
@@ -104,15 +112,15 @@ const App = () => {
         console.error(error);
       }
     } else {
-      alert("Metamask extensions not detected!");
+      return "noMetamask";
     }
-    return false;
+    return "newErrorToHandle";
   };
 
   const changeToken = async (tokenAddress) => {
     const token = await new web3.eth.Contract(abi, tokenAddress);
 
-    const tokenName = await token.methods.name().call();
+    const name = await token.methods.name().call();
     const symbol = await token.methods.symbol().call();
     const max_supp = await token.methods
       ._maximumSupply()
@@ -123,17 +131,24 @@ const App = () => {
       .call()
       .then((bal) => web3.utils.fromWei(bal, "ether"));
 
+    const total_supp = await token.methods
+      .totalSupply()
+      .call()
+      .then((bal) => web3.utils.fromWei(bal, "ether"));
+
     const contract = {
       address: tokenAddress,
-      name: tokenName,
-      symbol: symbol,
-      max_supp: max_supp,
+      name,
+      symbol,
+      max_supp,
+      total_supp,
       instance: token,
-      balance: balance,
+      balance,
     };
     setToken(contract);
   };
 
+  //update current token balance
   const updateTokenBalance = async () => {
     const balance = await token.instance.methods
       .balanceOf(address)
@@ -142,13 +157,33 @@ const App = () => {
 
     const contract = {
       ...token,
-      balance: balance,
+      balance,
     };
     setToken(contract);
   };
 
+  //update current token balance and total supply
+  const updateTokenBalances = async () => {
+    const balance = await token.instance.methods
+      .balanceOf(address)
+      .call()
+      .then((bal) => web3.utils.fromWei(bal, "ether"));
+
+    const total_supp = await token.instance.methods
+      .totalSupply()
+      .call()
+      .then((bal) => web3.utils.fromWei(bal, "ether"));
+
+    const contract = {
+      ...token,
+      total_supp,
+      balance,
+    };
+    setToken(contract);
+  };
+
+  //update eth balance
   const updateBalance = async (fromAddress) => {
-    //eth balance
     const ethBalance = await web3.eth
       .getBalance(fromAddress)
       .then((value) => web3.utils.fromWei(value, "ether"));
@@ -156,17 +191,18 @@ const App = () => {
     setBalance(ethBalance);
   };
 
+  //transfer current token
   const sendTransaction = async (to, bal) => {
     const amount = bal + "";
     const recipient = to;
-    /*    ETH
+    /*   SEND ETH
     await web3.eth.sendTransaction({
       from: address,
       to: recipient,
       value: web3.utils.toWei(amount, "ether")
     });
     updateBalance(address);
-*/
+    */
     try {
       await token.instance.methods
         .transfer(recipient, web3.utils.toWei(amount, "ether"))
@@ -178,14 +214,14 @@ const App = () => {
     } catch (error) {
       console.log("error happened");
       console.error(error);
-
       return false;
     }
   };
 
+  //get user eth balance, current token balance and symbol
   const getUserBalance = async (fromAddress) => {
     //eth balance
-    let data = [];
+    let tknData = [];
 
     const ethBalance = await web3.eth
       .getBalance(fromAddress)
@@ -235,7 +271,7 @@ const App = () => {
             //max_supp: max_supp,
             //instance: token,
           };
-          data.push(contract);
+          tknData.push(contract);
         }
       } else {
         console.log("No data available");
@@ -244,9 +280,10 @@ const App = () => {
       console.error(error);
     }
 
-    return { eth: ethBalance, tkn: data };
+    return { ethBalance, tknData };
   };
 
+  //mint current token
   const handleMint = async (bal) => {
     bal = bal + "";
 
@@ -256,13 +293,24 @@ const App = () => {
         .send({ from: address });
 
       updateBalance(address);
-      updateTokenBalance();
-      return true;
-    } catch (err) {
-      console.log("error happened");
-      console.log(err);
-      //console.log(JSON.parse(err.message.substring(15).trim()).message);
-      return false;
+      updateTokenBalances();
+      return "ok";
+    } catch (error) {
+      console.log(error.message);
+      const reverterErrorMsg = "Transaction has been reverted by the EVM:";
+      const userCanceledOperation =
+        "MetaMask Tx Signature: User denied transaction signature.";
+      if (error.message.startsWith(reverterErrorMsg)) {
+        const receiptString = error.message.slice(reverterErrorMsg.length);
+
+        const receiptJSON = JSON.parse(receiptString);
+
+        console.log(receiptJSON.transactionHash);
+        return receiptJSON.transactionHash;
+      } else if (error.message.startsWith(userCanceledOperation)) {
+        return "userCanceledOperation";
+      }
+      return "new error to handle :(";
     }
   };
 

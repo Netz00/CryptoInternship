@@ -2,8 +2,7 @@ import { withRouter, Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { HiBackspace } from "react-icons/hi";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import SubmitButton from "./SubmitButton";
+import SubmitButton from "../SubmitButton";
 
 const useStyles = makeStyles((theme) => ({
   back: {
@@ -27,12 +26,10 @@ const useStyles = makeStyles((theme) => ({
 const CreateToken = ({ address, history, makeNewToken }) => {
   const classes = useStyles();
 
-  const [wait, setWait] = useState(false);
-
   const {
     register,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     clearErrors,
   } = useForm({
@@ -42,7 +39,6 @@ const CreateToken = ({ address, history, makeNewToken }) => {
   const onSubmit = async (data) => {
     //alert(JSON.stringify(data));
     console.log("Deploying contract...");
-    setWait(true);
     const res = await makeNewToken(
       data.tokenName,
       data.tokenSymbol,
@@ -52,7 +48,6 @@ const CreateToken = ({ address, history, makeNewToken }) => {
     //save token in the firebase
 
     console.log("res:" + res);
-    setWait(false);
     if (res) {
       setError("success", {
         type: "manual",
@@ -96,8 +91,10 @@ const CreateToken = ({ address, history, makeNewToken }) => {
               Token name
             </label>
             <input
+              disabled={isSubmitting}
               className="inputTkn"
               type="text"
+              maxlength="31"
               placeholder="Token name"
               {...register("tokenName", {
                 required: "this is a required",
@@ -116,8 +113,10 @@ const CreateToken = ({ address, history, makeNewToken }) => {
               Token symbol
             </label>
             <input
+              disabled={isSubmitting}
               className="inputTkn"
               type="text"
+              maxlength="5"
               placeholder="Token symbol"
               {...register("tokenSymbol", {
                 required: "this is required",
@@ -140,6 +139,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
             <input
               className="inputTkn"
               type="number"
+              disabled={isSubmitting}
               step="any"
               placeholder="Max supply"
               {...register("maxSupply", {
@@ -164,7 +164,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
             )}
           </div>
           <div className="submit">
-            <SubmitButton wait={wait} text="Create" />
+            <SubmitButton wait={isSubmitting} text="Create" />
           </div>
         </form>
       </div>

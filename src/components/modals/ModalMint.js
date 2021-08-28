@@ -4,6 +4,7 @@ import { FaTimes } from "react-icons/fa";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import SubmitButton from "../SubmitButton";
+import Link from "@material-ui/core/Link";
 
 import { useForm } from "react-hook-form";
 
@@ -20,17 +21,19 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
+  modal: {
+    backgroundColor: "rgb(45 13 13 / 91%)",
+  },
 }));
 
 const ModalMint = ({ token, handleMint }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [wait, setWait] = useState(false);
 
   const {
     register,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     clearErrors,
   } = useForm({
@@ -44,25 +47,42 @@ const ModalMint = ({ token, handleMint }) => {
   };
 
   const handleMintSubmit = async (data) => {
-    const bal = data.balance * 1;
+    const bal = data.balance;
     if (token === null)
       setError("balance", {
         type: "manual",
         message: "Which token???",
       });
     else {
-      setWait(true);
       const res = await handleMint(bal);
-      res
-        ? setError("success", {
+
+      switch (res) {
+        case "ok":
+          setError("success", {
             type: "manual",
             message: "Completed.",
-          })
-        : setError("balance", {
-            type: "manual",
-            message: "Error happened check metamask for more info.",
           });
-      setWait(false);
+          break;
+        case "userCanceledOperation":
+          setError("balance", {
+            type: "manual",
+            message: "Action aborted.",
+          });
+          break;
+          case "new error to handle :(":
+            setError("balance", {
+              type: "manual",
+              message: "Unknown error happened. Please try again later 🙈",
+            });
+            break;
+        default:
+          setError("metamask", {
+            type: "manual",
+            message: res,
+          });
+          break;
+      }
+      console.log(res);
     }
   };
 
@@ -80,6 +100,7 @@ const ModalMint = ({ token, handleMint }) => {
       <Modal
         open={modalIsOpen}
         onClose={closeModal}
+        className={classes.modal}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
@@ -104,7 +125,7 @@ const ModalMint = ({ token, handleMint }) => {
                 <p>Pick token first</p>
               )}
             </div>
-            <div className="max_supply simple-modal-description">
+            <div className="max_supply2 simple-modal-description">
               {token && (
                 <p>
                   {token.max_supp} {token.symbol} MAX
@@ -121,15 +142,15 @@ const ModalMint = ({ token, handleMint }) => {
                 className="inputTkn"
                 type="number"
                 step="any"
+                disabled={isSubmitting}
                 placeholder="Balance"
                 {...register("balance", {
                   required: "this is a required",
-                  min: { value: 1, message: "Min value is 1" },
+                  min: { value: 0.00000001, message: "Min value is 0.00000001" },
                   max: {
-                    value: token && token.max_supp - token.balance,
-                    message: `Max value is ${
-                      token && token.max_supp - token.balance
-                    }`,
+                    value: token && token.max_supp - token.total_supp,
+                    message:
+                      token && `Max value is ${token.max_supp - token.total_supp}`,
                   },
                   maxLength: {
                     value: 30,
@@ -143,16 +164,32 @@ const ModalMint = ({ token, handleMint }) => {
               />
             </div>
             <div className="error_msg simple-modal-description">
-              {errors.balance ? (
+              {
+              errors.metamask ? (
+                <Link
+                  rel="noopener"
+                  target="_blank"
+                  color="inherit"
+                  href={
+                    "https://ropsten.etherscan.io/tx/" + errors.metamask.message
+                  }
+                >
+                  <p className="errorMsg">
+                    Error happened, click here for more info.
+                  </p>
+                </Link>
+              ) : errors.balance ? (
                 <p className="errorMsg">{errors.balance.message}</p>
               ) : (
                 errors.success && (
                   <p className="successMsg">{errors.success.message}</p>
                 )
-              )}
+              )
+              
+              }
             </div>
             <div className="submit simple-modal-description">
-              <SubmitButton wait={wait} text="Mint" />
+              <SubmitButton wait={isSubmitting} text="Mint" />
             </div>
           </div>
         </form>

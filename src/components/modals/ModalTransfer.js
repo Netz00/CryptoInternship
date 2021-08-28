@@ -21,17 +21,20 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
+
+  modal: {
+    backgroundColor: "rgb(45 13 13 / 91%)",
+  },
 }));
 
 const ModalTransfer = ({ address, token, handleTransfer }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [wait, setWait] = useState(false);
 
   const {
     register,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     clearErrors,
   } = useForm({
@@ -46,7 +49,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
 
   const handleTransferSubmit = async (data) => {
     const _address = data.address;
-    const bal = data.balance * 1;
+    const bal = data.balance;
 
     if (token === null)
       setError("balance", {
@@ -69,7 +72,6 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
         message: "Invalid etherium address.",
       });
     else {
-      setWait(true);
       const res = await handleTransfer(_address, bal);
       res
         ? setError("success", {
@@ -80,8 +82,6 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
             type: "manual",
             message: "Error happened check metamask for more info.",
           });
-
-      setWait(false);
     }
   };
 
@@ -99,6 +99,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
       <Modal
         open={modalIsOpen}
         onClose={closeModal}
+        className={classes.modal}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
@@ -133,6 +134,8 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
               <input
                 className="inputTkn"
                 type="text"
+                disabled={isSubmitting}
+                maxlength="43"
                 placeholder="Address"
                 {...register("address", {
                   required: "this is a required",
@@ -163,11 +166,19 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
               <input
                 className="inputTkn"
                 type="number"
+                disabled={isSubmitting}
                 step="any"
                 placeholder="Balance"
                 {...register("balance", {
                   required: "this is a required",
-                  min: { value: 1, message: "Min value is 1" },
+                  min: {
+                    value: 0.00000001,
+                    message: "Min value is 0.00000001",
+                  },
+                  max: {
+                    value: token && token.balance,
+                    message: token && `Max value is ${token.balance}`,
+                  },
                   maxLength: {
                     value: 30,
                     message: "Max length is 30",
@@ -191,7 +202,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
             </div>
 
             <div className="SumbmitButton simple-modal-description">
-              <SubmitButton wait={wait} text="Transfer" />
+              <SubmitButton wait={isSubmitting} text="Transfer" />
             </div>
           </div>
         </form>

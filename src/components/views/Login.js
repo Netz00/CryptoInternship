@@ -42,7 +42,22 @@ const Login = ({ getUserAccount, history, address }) => {
     e.preventDefault();
     const res = await getUserAccount();
 
-    res && history.push("/Dashboard");
+    switch (res) {
+      case "ok":
+        history.push("/Dashboard");
+        break;
+      case "wrongNet":
+        alert(
+          "Your MetaMask in on the wrong network. Please switch on Ropsten test-net and try again!"
+        );
+        break;
+      case "noMetamask":
+        alert("Metamask extensions not detected!");
+        break;
+      default:
+        alert("Unknown error happened. Please try again later 🙈");
+        break;
+    }
   };
 
   return (
@@ -56,10 +71,7 @@ const Login = ({ getUserAccount, history, address }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form
-          className={classes.form}
-          onSubmit={handleSubmit}
-        >
+        <form className={classes.form} onSubmit={handleSubmit}>
           <Button
             type="submit"
             fullWidth
@@ -69,7 +81,6 @@ const Login = ({ getUserAccount, history, address }) => {
           >
             Sign In with Metamask
           </Button>
-          <p>Please select Ropsten test-net at your metamask wallet to avoid any unwanted expenses.</p>
         </form>
       </div>
     </Container>

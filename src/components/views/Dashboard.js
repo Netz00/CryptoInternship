@@ -7,10 +7,10 @@ import { HiOutlineLogout } from "react-icons/hi";
 
 import { withRouter, Redirect } from "react-router-dom";
 
-import ModalTransfer from "./modals/ModalTransfer";
+import ModalTransfer from "../modals/ModalTransfer";
 
-import ModalMint from "./modals/ModalMint";
-import { useStoreApi } from "../storeApi";
+import ModalMint from "../modals/ModalMint";
+import { useStoreApi } from "../../storeApi";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -65,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = ({ history, handleMint, handleTransfer, changeToken }) => {
   const classes = useStyles();
-
   const { address, ethBalance, token, tokens } = useStoreApi();
 
   return (
@@ -113,7 +112,7 @@ const Dashboard = ({ history, handleMint, handleTransfer, changeToken }) => {
         <p key="ethBal">{ethBalance} ETH</p>
         {token && (
           <p key="symb">
-            {token.balance} {token.symbol} 
+            {token.balance} {token.symbol}
           </p>
         )}
         {token && (
@@ -124,6 +123,11 @@ const Dashboard = ({ history, handleMint, handleTransfer, changeToken }) => {
         {token && (
           <p key="maxSupp">
             {token.symbol} max supply: {token.max_supp}
+          </p>
+        )}
+        {token && (
+          <p key="totSupp">
+            {token.symbol} Total supply: {token.total_supp}
           </p>
         )}
       </div>
