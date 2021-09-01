@@ -5,8 +5,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Cookies from "universal-cookie";
-import AddressInput from "./inputs/AddressInput";
 
 import PropTypes from "prop-types";
 
@@ -29,40 +27,42 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    background: "#121212",
+    borderRadius: 8,
+    border: 0,
+    color: "white",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
 }));
 
-const ethereum_address = require("ethereum-address");
-
-const Login = ({ onLoginSuccess, history, CurrentUser }) => {
+const Login = ({ getUserAccount, history, address }) => {
   const classes = useStyles();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const res = await getUserAccount();
 
-    const address = e.target.elements.address.value.trim();
-
-    if (ethereum_address.isAddress(address)) {
-      const cookies = new Cookies();
-
-      onLoginSuccess(address);
-      cookies.set("address", address, { path: "/" });
-
-      history.push("/Dashboard");
-    } else {
-      e.preventDefault();
+    switch (res) {
+      case "ok":
+        history.push("/Dashboard");
+        break;
+      case "wrongNet":
+        alert(
+          "Your MetaMask in on the wrong network. Please switch on Ropsten test-net and try again!"
+        );
+        break;
+      case "noMetamask":
+        alert("Metamask extensions not detected!");
+        break;
+      default:
+        alert("Unknown error happened. Please try again later 🙈");
+        break;
     }
-
-    //redirect user to / where cookie will be inspected, and if valid redirect him to homepage
   };
 
   return (
     <Container component="main" maxWidth="sm">
-      {CurrentUser.address === "" ? (
-        <Redirect to="/" />
-      ) : (
-        <Redirect to="/Dashboard" />
-      )}
+      {address !== null && <Redirect to="/Dashboard" />}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -71,20 +71,15 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form
-          className={classes.form}
-          action="/Dashboard"
-          onSubmit={handleSubmit}
-        >
-          <AddressInput />
+        <form className={classes.form} onSubmit={handleSubmit}>
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            color="primary"
+            color="secondary"
             className={classes.submit}
           >
-            Sign In
+            Sign In with Metamask
           </Button>
         </form>
       </div>
@@ -93,7 +88,7 @@ const Login = ({ onLoginSuccess, history, CurrentUser }) => {
 };
 
 Login.propTypes = {
-  onLoginSuccess: PropTypes.func.isRequired,
+  getUserAccount: PropTypes.func.isRequired,
 };
 
 export default withRouter(Login);

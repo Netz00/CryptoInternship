@@ -5,6 +5,14 @@
 /.pnp
 .pnp.js
 
+/src/contracts/secret
+
+/src/contracts/build/*
+!/src/contracts/build/contracts/
+/src/contracts/build/contracts/*
+!/src/contracts/build/contracts/myERC20.json
+
+
 # testing
 /coverage
 

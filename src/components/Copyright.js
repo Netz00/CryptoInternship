@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TITLE = "ScamTrade";
+const TITLE = "AYM";
 
 const Copyright = () => {
   const classes = useStyles();
@@ -24,7 +24,7 @@ const Copyright = () => {
         align="center"
       >
         {"Copyright © "}
-        <Link color="inherit" href="https://material-ui.com/">
+        <Link  rel="noopener" target="_blank" color="inherit" href="https://github.com/Netz00/BlankInternship">
           {TITLE}
         </Link>{" "}
         {new Date().getFullYear()}

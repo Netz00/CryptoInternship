@@ -1,5 +1,5 @@
 import { withRouter, Redirect } from "react-router-dom";
-import AddressInput from "./inputs/AddressInput";
+import AddressInput from "../inputs/AddressInput";
 import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -8,7 +8,7 @@ import { HiBackspace, HiOutlineSearch } from "react-icons/hi";
 const useStyles = makeStyles((theme) => ({
   back: {
     margin: theme.spacing(1, 1, 2),
-    color: "black",
+    color: "aliceblue",
     cursor: "pointer",
   },
   submit: {
@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     border: "0px",
   },
   icon: {
-    color: "black",
     cursor: "pointer",
     marginTop: "16px",
   },
@@ -33,18 +32,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Explore = ({ Address, history, newAddress }) => {
-  const [formData, updateFormData] = useState(Address);
+const Explore = ({ address, history, newSearch }) => {
+  const [balance, setBalance] = useState([0, []]);
   const classes = useStyles();
   const handleChangeText = async (e) => {
     e.preventDefault();
-    const address = e.target.elements.address.value.trim();
-    const searchRes = newAddress(address);
-    updateFormData(searchRes);
+    const _address = e.target.elements.address.value.trim();
+    const res = await newSearch(_address);
+    setBalance([res.ethBalance, res.tknData]);
   };
 
   return (
     <>
+      {address === "" && <Redirect to="/" />}
+
       <div className="header">
         <HiBackspace
           size="40px"
@@ -56,15 +57,9 @@ const Explore = ({ Address, history, newAddress }) => {
       </div>
 
       <div className="explore_container">
-        {Address.address === "" ? (
-          <Redirect to="/" />
-        ) : (
-          <Redirect to="/Explore" />
-        )}
-
         <div className="addressWide">
           <form onSubmit={handleChangeText} className={classes.form}>
-            <AddressInput text={Address.address} />
+            <AddressInput text={address} />
 
             <button type="submit" className={classes.submit}>
               <HiOutlineSearch size="40px" className={classes.icon} />
@@ -74,10 +69,25 @@ const Explore = ({ Address, history, newAddress }) => {
 
         <div className="balance">
           <Typography component="h1" variant="h5">
-            <p key="bal">Balance: {formData.balance}</p>
+            <p key="ethBal">{balance[0]} ETH</p>
+            {balance[1] &&
+              balance[1].map((token, index) => {
+                return (
+                  <p key={index}>
+                    {token.balance} {token.symbol}
+                  </p>
+                );
+              })}
           </Typography>
         </div>
-        <div className="createdAt">
+      </div>
+    </>
+  );
+};
+
+export default withRouter(Explore);
+
+/**  <div className="createdAt">
           <Typography component="h1" variant="h5">
             <p key="date">
               Created at: {new Date(formData.createdAt).toUTCString()}
@@ -116,9 +126,4 @@ const Explore = ({ Address, history, newAddress }) => {
             })}
           </Typography>
         </div>
-      </div>
-    </>
-  );
-};
-
-export default withRouter(Explore);
+      </div> */

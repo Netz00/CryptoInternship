@@ -1,114 +1,200 @@
-import NumericInput from "../inputs/NumericInput";
 import { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { FaTimes } from "react-icons/fa";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
+import SubmitButton from "../SubmitButton";
+import Link from "@material-ui/core/Link";
+
+import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    height: "fit-content",
-    position: "relative",
-    width: 500,
-    backgroundColor: "#424242",
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    display: "inline-flex",
-  },
   exit: {
     color: "red",
     cursor: "pointer",
   },
-  submitButton: {
-    cursor: "pointer",
+  btn: {
+    margin: theme.spacing(2, 2, 2),
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    borderRadius: 3,
+    border: 0,
+    color: "white",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+  },
+  modal: {
+    backgroundColor: "rgb(45 13 13 / 91%)",
   },
 }));
 
-const ModalMint = ({ Address, handleMint }) => {
+const ModalMint = ({ token, handleMint }) => {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [errorMsg, updateErrorMsg] = useState("");
 
-  function openModal() {
-    setIsOpen(true);
-  }
+  const {
+    register,
+    setError,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    clearErrors,
+  } = useForm({
+    mode: "onChange",
+  });
 
-  function closeModal() {
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => {
+    clearErrors();
     setIsOpen(false);
-  }
+  };
 
-  const handleMintSubmit = (e) => {
-    e.preventDefault();
+  const handleMintSubmit = async (data) => {
+    const bal = data.balance;
+    if (token === null)
+      setError("balance", {
+        type: "manual",
+        message: "Which token???",
+      });
+    else {
+      const res = await handleMint(bal);
 
-    const bal = e.target.elements.NumericInput.value.trim()*1;
-
-    if (bal === 0) 
-      updateErrorMsg("Pick value >0 to send.");
-
-    else if (!handleMint(bal))
-      updateErrorMsg("Error.");
-
-    else 
-      updateErrorMsg("Success");
-      
+      switch (res) {
+        case "ok":
+          setError("success", {
+            type: "manual",
+            message: "Completed.",
+          });
+          break;
+        case "userCanceledOperation":
+          setError("balance", {
+            type: "manual",
+            message: "Action aborted.",
+          });
+          break;
+          case "new error to handle :(":
+            setError("balance", {
+              type: "manual",
+              message: "Unknown error happened. Please try again later 🙈",
+            });
+            break;
+        default:
+          setError("metamask", {
+            type: "manual",
+            message: res,
+          });
+          break;
+      }
+      console.log(res);
+    }
   };
 
   return (
-    <div>
-      <Button variant="contained" color="primary" onClick={openModal}>
+    <>
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.btn}
+        onClick={openModal}
+      >
         Mint
       </Button>
 
       <Modal
         open={modalIsOpen}
         onClose={closeModal}
+        className={classes.modal}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-        <form onSubmit={handleMintSubmit}>
-          <div className="container">
-            <div className="Transfer">
+        <form onSubmit={handleSubmit(handleMintSubmit)}>
+          <div className="mint_container">
+            <div className="Mint">
               <h2 id="simple-modal-title">Mint</h2>
             </div>
-            <div className="B">
+            <div className="close simple-modal-description">
               <FaTimes
                 className={classes.exit}
                 onClick={closeModal}
                 size="40px"
               />
             </div>
-
             <div className="balance simple-modal-description">
-              <p>Current balance: {Address.balance}</p>
+              {token ? (
+                <p>
+                  {token.balance} {token.symbol}
+                </p>
+              ) : (
+                <p>Pick token first</p>
+              )}
+            </div>
+            <div className="max_supply2 simple-modal-description">
+              {token && (
+                <p>
+                  {token.max_supp} {token.symbol} MAX
+                </p>
+              )}
             </div>
 
-            <div className="address simple-modal-description"></div>
-            <div className="balanceToSend simple-modal-description">
-              <NumericInput />
-            </div>
+            <div className="input_balance simple-modal-description">
+              <label className="labelTkn" htmlFor="balance">
+                Balance
+              </label>
 
-            <div className="msg">
-              <p>{errorMsg}</p>
+              <input
+                className="inputTkn"
+                type="number"
+                step="any"
+                disabled={isSubmitting}
+                placeholder="Balance"
+                {...register("balance", {
+                  required: "this is a required",
+                  min: { value: 0.00000001, message: "Min value is 0.00000001" },
+                  max: {
+                    value: token && token.max_supp - token.total_supp,
+                    message:
+                      token && `Max value is ${token.max_supp - token.total_supp}`,
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: "Max length is 30",
+                  },
+                  pattern: {
+                    value: /^\d+(\.\d{0,8})?$/i,
+                    message: "8 decimals max",
+                  },
+                })}
+              />
             </div>
-
-            <div className="SumbmitButton simple-modal-description">
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                className={classes.submitButton}
-              >
-                Mint
-              </Button>
+            <div className="error_msg simple-modal-description">
+              {
+              errors.metamask ? (
+                <Link
+                  rel="noopener"
+                  target="_blank"
+                  color="inherit"
+                  href={
+                    "https://ropsten.etherscan.io/tx/" + errors.metamask.message
+                  }
+                >
+                  <p className="errorMsg">
+                    Error happened, click here for more info.
+                  </p>
+                </Link>
+              ) : errors.balance ? (
+                <p className="errorMsg">{errors.balance.message}</p>
+              ) : (
+                errors.success && (
+                  <p className="successMsg">{errors.success.message}</p>
+                )
+              )
+              
+              }
+            </div>
+            <div className="submit simple-modal-description">
+              <SubmitButton wait={isSubmitting} text="Mint" />
             </div>
           </div>
         </form>
       </Modal>
-    </div>
+    </>
   );
 };
 

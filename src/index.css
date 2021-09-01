@@ -4,68 +4,19 @@ body {
 }
 body {
   font: 16px sans-serif;
-  background: #4da0b0; /* fallback for old browsers */
+  background: #12c2e9; /* fallback for old browsers */
   background: -webkit-linear-gradient(
-    to bottom,
-    #d39d38,
-    #4da0b0
+    to right,
+    #f64f59,
+    #c471ed,
+    #12c2e9
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
-    to bottom,
-    #d39d38,
-    #4da0b0
+    to right,
+    #f64f59,
+    #c471ed,
+    #12c2e9
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-ol,
-ul {
-  padding-left: 30px;
-}
-
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
-}
-
-.status {
-  margin-bottom: 10px;
-}
-
-.square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 50px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 40px;
-  align-items: center;
-  justify-content: center;
-}
-
-.square:focus {
-  outline: none;
-}
-
-.kbd-navigation .square:focus {
-  background: #ddd;
-}
-
-.game {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.game-info {
-  margin-left: 20px;
 }
 
 .Login {
@@ -95,10 +46,10 @@ ul {
 /*EXPLORE*/
 /*https://grid.layoutit.com/*/
 .explore_container {
-  margin: 5%;
+  margin: 10%;
   display: grid;
   grid-template-columns: 0.5fr 0.5fr;
-  grid-template-rows: 90px 80px 80px 80px;
+  grid-template-rows: 100px 100px;
   grid-auto-rows: 1fr;
   gap: 0px 0px;
   grid-auto-flow: row;
@@ -109,90 +60,83 @@ ul {
 
   grid-template-areas:
     "addressWide addressWide"
-    "balance balance"
-    "createdAt createdAt"
-    "TransactionsIN TransactionsOUT";
-}
-
-.TransactionsIN {
-  justify-self: center;
-  align-self: start;
-  grid-area: TransactionsIN;
-  overflow: auto;
-  height: 340px;
-}
-.TransactionsOUT {
-  justify-self: center;
-  align-self: start;
-  grid-area: TransactionsOUT;
-  overflow: auto;
-  height: 340px;
-}
-
-.createdAt {
-  grid-area: createdAt;
+    "balance balance";
 }
 
 .addressWide {
-  width: 470px;
+  width: 480px;
   grid-area: addressWide;
 }
 
 /*MODAL_TRANFER*/
 
 .container {
-  display: grid;
-  grid-template-columns: 350px 50px;
-  grid-template-rows: 49px 43px 84px 50px 57px 50px;
-  gap: 7px 4px;
+  display: inline-grid;
+  grid-template-columns: 400px 60px;
+  grid-template-rows: 70px 50px 120px 90px 36px 50px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 10px 0px;
   grid-auto-flow: row;
   justify-content: center;
   align-content: space-around;
   grid-template-areas:
     "Transfer B"
-    "balance balance"
+    "balance ."
     "address address"
     "balanceToSend balanceToSend"
     "msg msg"
     "SumbmitButton SumbmitButton";
 
-  width: 450px;
+  width: 490px;
   height: auto;
 
   position: absolute;
   top: 50%;
   left: 50%;
+
+  max-width: 500px;
+  margin: 0 auto;
+  margin: 0 auto;
+  border-radius: 10px;
+
   -ms-transform: translateX(-50%) translateY(-50%);
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 
-  background: linear-gradient(to bottom, #d39d38, #4da0b0);
-  border: 1px solid #3f51b5;
-  transform: translate(-50%, -50%);
-  border-radius: 10px;
+  color: aliceblue;
+  background: #292323;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
 
-  padding: 25px;
+  border-radius: 10px;
 }
 
 .Transfer {
-  justify-self: start;
-  align-self: start;
+  justify-self: center;
+  align-self: end;
   grid-area: Transfer;
 }
 
 .B {
-  justify-self: end;
-  align-self: start;
+  justify-self: center;
+  align-self: end;
   grid-area: B;
 }
 
 .balance {
   justify-self: center;
   grid-area: balance;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .address {
-  width: 400px;
+  min-width: 380px;
   justify-self: center;
   grid-area: address;
 }
@@ -204,7 +148,6 @@ ul {
 
 .SumbmitButton {
   justify-self: end;
-  align-self: end;
   grid-area: SumbmitButton;
 }
 
@@ -214,14 +157,190 @@ ul {
 }
 
 .header {
+  display: inline-flex;
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
   height: 65px;
-  background-color: darkslategrey;
+  background-color: #121212;
   border-bottom: 2px solid #ffd400e0;
 
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+}
+
+.errorMsg {
+  color: #bf1650;
+}
+
+.errorMsg::before {
+  display: inline;
+  content: "⚠ ";
+}
+
+.successMsg {
+  color: #16bf2d;
+}
+
+.successMsg::before {
+  display: inline;
+  content: "✅ ";
+}
+
+.inputTkn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 1px solid white;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.labelTkn {
+  line-height: 1;
+  text-align: left;
+  display: block;
+  margin-bottom: 13px;
+  margin-top: 20px;
+  color: white;
+  font-size: 14px;
+  font-weight: 200;
+}
+
+.generate_token_parent {
+  display: block;
+  position: absolute;
+  text-align: center;
+  width: 99%;
+}
+
+.make_token_container {
+  background: #121212;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+
+  max-width: 500px;
+  margin: 0 auto;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: 10px;
+
+  display: inline-grid;
+  margin: 5%;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: 90px 90px 100px 75px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 30px 0px;
+  grid-auto-flow: row;
+  justify-content: center;
+  align-content: space-between;
+  justify-items: center;
+  align-items: center;
+  grid-template-areas:
+    "token__name"
+    "token_symbol"
+    "max_supply"
+    "submit";
+  width: 50%;
+  height: 60%;
+}
+
+.token__name {
+  align-self: start;
+  grid-area: token__name;
+}
+.token_symbol {
+  align-self: start;
+  grid-area: token_symbol;
+}
+.max_supply {
+  align-self: start;
+  width: inherit;
+  grid-area: max_supply;
+}
+.submit {
+  align-self: center;
+  grid-area: submit;
+}
+
+/*MINT*/
+.mint_container {
+  color: aliceblue;
+  background: #292323;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+
+  width: 400px;
+  height: auto;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-55%, -60%);
+
+  max-width: 400px;
+  margin: 0 auto;
+  margin: 0 auto;
+  border-radius: 10px;
+
+  display: inline-grid;
+
+  grid-template-columns: 300px 80px;
+  grid-template-rows: 65px 55px 56px 95px 40px 80px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 10px 0px;
+  grid-auto-flow: row;
+  justify-content: center;
+  align-content: space-between;
+  justify-items: center;
+  align-items: center;
+  grid-template-areas:
+    "Mint close"
+    "balance balance"
+    "max_supply max_supply"
+    "input_balance input_balance"
+    "error_msg error_msg"
+    ". submit";
+}
+
+.error_msg {
+  grid-area: error_msg;
+}
+
+.Mint {
+  justify-self: left;
+  margin-left: 15px;
+  grid-area: Mint;
+}
+
+.close {
+  justify-self: center;
+  align-self: end;
+  grid-area: close;
+}
+
+
+
+.input_balance {
+  grid-area: input_balance;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  align-self: start;
+}
+
+.submit {
+  grid-area: submit;
 }
