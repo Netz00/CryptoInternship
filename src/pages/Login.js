@@ -5,6 +5,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { useForm } from "react-hook-form";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import PropTypes from "prop-types";
 
@@ -24,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: "80%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
+    textAlign:"center",
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -33,29 +36,49 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   },
+  circularProgress: {
+    color: "black",
+  },
 }));
 
 const Login = ({ getUserAccount, history, address }) => {
   const classes = useStyles();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const {
+    setError,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    clearErrors,
+  } = useForm({
+    mode: "onChange",
+  });
+
+  const onSubmit = async () => {
     const res = await getUserAccount();
 
     switch (res) {
       case "ok":
+        clearErrors();
         history.push("/Dashboard");
         break;
       case "wrongNet":
-        alert(
-          "Your MetaMask in on the wrong network. Please switch on Ropsten test-net and try again!"
-        );
+        setError("LoginFailed", {
+          type: "manual",
+          message:
+            "Your MetaMask in on the wrong network. Please switch on Ropsten test-net and try again!",
+        });
         break;
       case "noMetamask":
-        alert("Metamask extensions not detected!");
+        setError("LoginFailed", {
+          type: "manual",
+          message: "Metamask extensions not detected!",
+        });
         break;
       default:
-        alert("Unknown error happened. Please try again later 🙈");
+        setError("LoginFailed", {
+          type: "manual",
+          message: "Unknown error happened. Please try again later 🙈",
+        });
         break;
     }
   };
@@ -71,16 +94,23 @@ const Login = ({ getUserAccount, history, address }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.submit}
-          >
-            Sign In with Metamask
-          </Button>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+          {isSubmitting ? (
+            <CircularProgress className={classes.circularProgress} />
+          ) : (
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+            >
+              Sign In with Metamask
+            </Button>
+          )}
+          {errors.LoginFailed && (
+            <p className="errorMsg">{errors.LoginFailed.message}</p>
+          )}
         </form>
       </div>
     </Container>

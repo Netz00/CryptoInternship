@@ -1,0 +1,87 @@
+.mint_container {
+  color: aliceblue;
+  background: #292323;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+
+  width: 400px;
+  height: auto;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-55%, -60%);
+
+  max-width: 400px;
+  margin: 0 auto;
+  margin: 0 auto;
+  border-radius: 10px;
+
+  display: inline-grid;
+
+  grid-template-columns: 300px 80px;
+  grid-template-rows: 65px 55px 56px 95px 40px 80px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 10px 0px;
+  grid-auto-flow: row;
+  justify-content: center;
+  align-content: space-between;
+  justify-items: center;
+  align-items: center;
+  grid-template-areas:
+    "Mint close"
+    "balance balance"
+    "max_supply max_supply"
+    "input_balance input_balance"
+    "error_msg error_msg"
+    ". submit";
+}
+
+.Mint {
+  justify-self: left;
+  margin-left: 15px;
+  grid-area: Mint;
+}
+
+.close {
+  justify-self: center;
+  align-self: end;
+  grid-area: close;
+}
+
+.balance {
+  justify-self: center;
+  grid-area: balance;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.max_supply {
+  align-self: start;
+  width: inherit;
+  grid-area: max_supply;
+}
+
+.input_balance {
+  grid-area: input_balance;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  align-self: start;
+}
+
+.error_msg {
+  grid-area: error_msg;
+}
+
+.submit {
+  grid-area: submit;
+}

@@ -11,11 +11,13 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "NEW-ADDRESS":
+    case "NEW-ACCOUNT":
       return {
         ...state,
         address: action.address,
-        message: action.message
+        message: action.message,
+        ethBalance: action.balance,
+        tokens: action.tokens,
       };
     case "SET-BALANCE":
       return {

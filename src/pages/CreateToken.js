@@ -2,7 +2,9 @@ import { withRouter, Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { HiBackspace } from "react-icons/hi";
 import { useForm } from "react-hook-form";
-import SubmitButton from "../SubmitButton";
+import SubmitButton from "../components/SubmitButton";
+import { Link } from "react-router-dom";
+import mclasses from "./CreateToken.module.css";
 
 const useStyles = makeStyles((theme) => ({
   back: {
@@ -72,21 +74,17 @@ const CreateToken = ({ address, history, makeNewToken }) => {
       {address === "" && <Redirect to="/" />}
 
       <div className="header">
-        <HiBackspace
-          size="40px"
-          className={classes.back}
-          onClick={() => {
-            history.push("/Dashboard");
-          }}
-        />
+        <Link to="/Dashboard" style={{ textDecoration: "none" }}>
+          <HiBackspace size="40px" className={classes.back} />
+        </Link>
       </div>
 
-      <div className="generate_token_parent">
+      <div className={mclasses.generate_token_parent}>
         <form
-          className="generate_token_form make_token_container"
+          className={mclasses.make_token_container}
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="token__name">
+          <div className={mclasses.token__name}>
             <label className="labelTkn" htmlFor="tokenName">
               Token name
             </label>
@@ -108,7 +106,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
               <p className="errorMsg">{errors.tokenName.message}</p>
             )}
           </div>
-          <div className="token_symbol">
+          <div className={mclasses.token_symbol}>
             <label className="labelTkn" htmlFor="tokenSymbol">
               Token symbol
             </label>
@@ -131,7 +129,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
             )}
           </div>
 
-          <div className="max_supply">
+          <div className={mclasses.max_supply}>
             <label className="labelTkn" htmlFor="maxSupply">
               Max supply
             </label>
@@ -163,7 +161,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
               )
             )}
           </div>
-          <div className="submit">
+          <div className={mclasses.submit}>
             <SubmitButton wait={isSubmitting} text="Create" />
           </div>
         </form>
