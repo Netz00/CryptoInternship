@@ -45,6 +45,7 @@ const Explore = ({ address, newSearch }) => {
     setBalance([res.ethBalance, res.tknData]);
   };
 
+
   return (
     <>
       {address === "" && <Redirect to="/" />}

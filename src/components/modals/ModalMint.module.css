@@ -63,7 +63,7 @@
 }
 
 .max_supply {
-  align-self: start;
+  text-align: center;
   width: inherit;
   grid-area: max_supply;
 }

@@ -192,7 +192,7 @@ const ModalMint = ({ token, handleMint }) => {
               )}
             </div>
             <div className={mclasses.submit}>
-              <SubmitButton wait={isSubmitting} text="Mint" />
+              <SubmitButton wait={isSubmitting}>Mint</SubmitButton>
             </div>
           </div>
         </form>

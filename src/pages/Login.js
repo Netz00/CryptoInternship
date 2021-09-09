@@ -1,32 +1,24 @@
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useForm } from "react-hook-form";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
 import PropTypes from "prop-types";
-
 import { withRouter, Redirect } from "react-router-dom";
+import MetamaskHead from "../components/MetamaskHead";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(12),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundcolor: theme.palette.secondary.main,
-  },
   form: {
     width: "80%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
-    textAlign:"center",
+    textAlign: "center",
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -88,12 +80,8 @@ const Login = ({ getUserAccount, history, address }) => {
       {address !== null && <Redirect to="/Dashboard" />}
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+        <MetamaskHead />
+
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           {isSubmitting ? (
             <CircularProgress className={classes.circularProgress} />

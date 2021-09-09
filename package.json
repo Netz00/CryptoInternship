@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
+    "@metamask/logo": "^3.0.1",
     "bootstrap": "^4.6.0",
     "css-what": "^5.0.1",
     "ethereum-address": "0.0.4",

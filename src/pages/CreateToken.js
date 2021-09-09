@@ -92,7 +92,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
               disabled={isSubmitting}
               className="inputTkn"
               type="text"
-              maxlength="31"
+              maxLength="31"
               placeholder="Token name"
               {...register("tokenName", {
                 required: "this is a required",
@@ -114,7 +114,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
               disabled={isSubmitting}
               className="inputTkn"
               type="text"
-              maxlength="5"
+              maxLength="5"
               placeholder="Token symbol"
               {...register("tokenSymbol", {
                 required: "this is required",
@@ -162,7 +162,7 @@ const CreateToken = ({ address, history, makeNewToken }) => {
             )}
           </div>
           <div className={mclasses.submit}>
-            <SubmitButton wait={isSubmitting} text="Create" />
+            <SubmitButton wait={isSubmitting}>Create</SubmitButton>
           </div>
         </form>
       </div>

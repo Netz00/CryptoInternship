@@ -4,7 +4,7 @@ import Copyright from "./components/layout/Copyright";
 import Explore from "./pages/Explore";
 import CreateToken from "./pages/CreateToken";
 import useWeb3 from "./useWeb3";
-import { useStoreApi } from "./storeApi";
+import { useStoreApi } from "./store/storeApi";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
@@ -122,6 +122,7 @@ const App = () => {
       ._maximumSupply()
       .call()
       .then((bal) => web3.utils.fromWei(bal, "ether"));
+
     const balance = await token.methods
       .balanceOf(address)
       .call()

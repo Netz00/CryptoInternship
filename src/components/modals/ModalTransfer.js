@@ -137,7 +137,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
                 className="inputTkn"
                 type="text"
                 disabled={isSubmitting}
-                maxlength="43"
+                maxLength="43"
                 placeholder="Address"
                 {...register("address", {
                   required: "this is a required",
@@ -204,7 +204,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
             </div>
 
             <div className={mclasses.SumbmitButton}>
-              <SubmitButton wait={isSubmitting} text="Transfer" />
+              <SubmitButton wait={isSubmitting}>Transfer</SubmitButton>
             </div>
           </div>
         </form>

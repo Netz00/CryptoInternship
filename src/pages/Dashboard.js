@@ -10,7 +10,7 @@ import { Redirect } from "react-router-dom";
 import ModalTransfer from "../components/modals/ModalTransfer";
 
 import ModalMint from "../components/modals/ModalMint";
-import { useStoreApi } from "../storeApi";
+import { useStoreApi } from "../store/storeApi";
 
 import { Link } from "react-router-dom";
 
