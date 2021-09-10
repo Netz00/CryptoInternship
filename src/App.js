@@ -1,17 +1,12 @@
-import Login from "./components/views/Login";
-import Dashboard from "./components/views/Dashboard";
-import Copyright from "./components/Copyright";
-import Explore from "./components/views/Explore";
-import CreateToken from "./components/views/CreateToken";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Copyright from "./components/layout/Copyright";
+import Explore from "./pages/Explore";
+import CreateToken from "./pages/CreateToken";
 import useWeb3 from "./useWeb3";
-import { useStoreApi } from "./storeApi";
+import { useStoreApi } from "./store/storeApi";
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import MyContract from "./contracts/build/contracts/myERC20.json"; //truffle project dirs
 
@@ -33,11 +28,10 @@ var firebaseConfig = {
 };
 
 const App = () => {
-  //https://github.com/PiotrNap/YouTube-channel-source-code/blob/374a09136b302983248245284af130be4d347d34/React-metamask-intro/src/App.js
-  //const { balance, address, message, setAddress, setBalance ,token, setToken, tokens, setTokens} = useStoreApi();
+  //const { balance, address, message, setAccount, setBalance ,token, setToken, tokens, setTokens} = useStoreApi();
   const {
     address,
-    setAddress,
+    setAccount,
     setBalance,
     token,
     setToken,
@@ -53,7 +47,7 @@ const App = () => {
     firebase.app(); // if already initialized, use that one
   }
 
-  // get user account on button click
+  // get user account on button click and update address, EthBalance, tokens
   const getUserAccount = async () => {
     if (window.ethereum) {
       if (window.ethereum.networkVersion !== "3") {
@@ -67,13 +61,13 @@ const App = () => {
       try {
         await window.ethereum.enable();
 
-        let addr;
+        const addr = await web3.eth
+          .getAccounts()
+          .then((accounts) => accounts[0]);
 
-        await web3.eth.getAccounts().then((accounts) => {
-          setAddress(accounts[0]);
-          updateBalance(accounts[0]);
-          addr = accounts[0];
-        });
+        const ethBalance = await web3.eth
+          .getBalance(addr)
+          .then((value) => web3.utils.fromWei(value, "ether"));
 
         try {
           const snapshot = await firebase
@@ -100,7 +94,9 @@ const App = () => {
               };
               data.push(contract);
             }
-            setTokens(data);
+
+            setAccount(addr, ethBalance, data);
+
             return "ok";
           } else {
             console.log("No data available");
@@ -126,6 +122,7 @@ const App = () => {
       ._maximumSupply()
       .call()
       .then((bal) => web3.utils.fromWei(bal, "ether"));
+
     const balance = await token.methods
       .balanceOf(address)
       .call()
@@ -263,15 +260,18 @@ const App = () => {
             .call()
             .then((bal) => web3.utils.fromWei(bal, "ether"));
 
-          const contract = {
-            //address: tokenAddress,
-            //name: tokenName,
-            symbol: symbol,
-            balance: balance,
-            //max_supp: max_supp,
-            //instance: token,
-          };
-          tknData.push(contract);
+          //don't show tokens which user does not possess
+          if (balance !== "0") {
+            const contract = {
+              //address: tokenAddress,
+              //name: tokenName,
+              symbol: symbol,
+              balance: balance,
+              //max_supp: max_supp,
+              //instance: token,
+            };
+            tknData.push(contract);
+          }
         }
       } else {
         console.log("No data available");
@@ -371,35 +371,33 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <div id="main" className="App">
-        {address === null && <Redirect to="/" />}
+    <div id="main" className="App">
+      {address === null && <Redirect to="/" />}
 
-        <Switch>
-          <Route exact path="/">
-            <Login getUserAccount={getUserAccount} address={address} />
-          </Route>
+      <Switch>
+        <Route exact path="/">
+          <Login getUserAccount={getUserAccount} address={address} />
+        </Route>
 
-          <Route path="/Dashboard">
-            <Dashboard
-              handleMint={handleMint}
-              handleTransfer={sendTransaction}
-              changeToken={changeToken}
-            />
-          </Route>
+        <Route path="/Dashboard">
+          <Dashboard
+            handleMint={handleMint}
+            handleTransfer={sendTransaction}
+            changeToken={changeToken}
+          />
+        </Route>
 
-          <Route path="/Explore">
-            <Explore newSearch={getUserBalance} address={address} />
-          </Route>
+        <Route path="/Explore">
+          <Explore newSearch={getUserBalance} address={address} />
+        </Route>
 
-          <Route path="/create-token">
-            <CreateToken address={address} makeNewToken={makeNewToken} />
-          </Route>
-        </Switch>
+        <Route path="/create-token">
+          <CreateToken address={address} makeNewToken={makeNewToken} />
+        </Route>
+      </Switch>
 
-        <Copyright />
-      </div>
-    </Router>
+      <Copyright />
+    </div>
   );
 };
 

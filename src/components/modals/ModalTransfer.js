@@ -6,6 +6,8 @@ import Modal from "@material-ui/core/Modal";
 import SubmitButton from "../SubmitButton";
 import { useForm } from "react-hook-form";
 
+import mclasses from "./ModalTranfer.module.css";
+
 const ethereum_address = require("ethereum-address");
 
 const useStyles = makeStyles((theme) => ({
@@ -104,11 +106,11 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
         aria-describedby="simple-modal-description"
       >
         <form onSubmit={handleSubmit(handleTransferSubmit)}>
-          <div className="container">
-            <div className="Transfer">
+          <div className={mclasses.container}>
+            <div className={mclasses.Transfer}>
               <h2 id="simple-modal-title">Transfer</h2>
             </div>
-            <div className="B simple-modal-description">
+            <div className={mclasses.B}>
               <FaTimes
                 className={classes.exit}
                 onClick={closeModal}
@@ -116,7 +118,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
               />
             </div>
 
-            <div className="balance simple-modal-description">
+            <div className={mclasses.balance}>
               {token ? (
                 <p>
                   Current balance: {token.balance} {token.symbol}
@@ -126,7 +128,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
               )}
             </div>
 
-            <div className="address simple-modal-description">
+            <div className={mclasses.address}>
               <label className="labelTkn" htmlFor="address">
                 Address
               </label>
@@ -135,7 +137,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
                 className="inputTkn"
                 type="text"
                 disabled={isSubmitting}
-                maxlength="43"
+                maxLength="43"
                 placeholder="Address"
                 {...register("address", {
                   required: "this is a required",
@@ -158,7 +160,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
                 <p className="errorMsg">{errors.address.message}</p>
               )}
             </div>
-            <div className="balanceToSend simple-modal-description">
+            <div className={mclasses.balanceToSend}>
               <label className="labelTkn" htmlFor="balance">
                 Balance
               </label>
@@ -191,7 +193,7 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
               />
             </div>
 
-            <div className="msg">
+            <div className={mclasses.msg}>
               {errors.balance ? (
                 <p className="errorMsg">{errors.balance.message}</p>
               ) : (
@@ -201,8 +203,8 @@ const ModalTransfer = ({ address, token, handleTransfer }) => {
               )}
             </div>
 
-            <div className="SumbmitButton simple-modal-description">
-              <SubmitButton wait={isSubmitting} text="Transfer" />
+            <div className={mclasses.SumbmitButton}>
+              <SubmitButton wait={isSubmitting}>Transfer</SubmitButton>
             </div>
           </div>
         </form>

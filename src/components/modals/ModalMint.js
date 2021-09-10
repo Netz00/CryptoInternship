@@ -8,6 +8,8 @@ import Link from "@material-ui/core/Link";
 
 import { useForm } from "react-hook-form";
 
+import mclasses from "./ModalMint.module.css";
+
 const useStyles = makeStyles((theme) => ({
   exit: {
     color: "red",
@@ -69,12 +71,12 @@ const ModalMint = ({ token, handleMint }) => {
             message: "Action aborted.",
           });
           break;
-          case "new error to handle :(":
-            setError("balance", {
-              type: "manual",
-              message: "Unknown error happened. Please try again later 🙈",
-            });
-            break;
+        case "new error to handle :(":
+          setError("balance", {
+            type: "manual",
+            message: "Unknown error happened. Please try again later 🙈",
+          });
+          break;
         default:
           setError("metamask", {
             type: "manual",
@@ -105,18 +107,18 @@ const ModalMint = ({ token, handleMint }) => {
         aria-describedby="simple-modal-description"
       >
         <form onSubmit={handleSubmit(handleMintSubmit)}>
-          <div className="mint_container">
-            <div className="Mint">
+          <div className={mclasses.mint_container}>
+            <div className={mclasses.Mint}>
               <h2 id="simple-modal-title">Mint</h2>
             </div>
-            <div className="close simple-modal-description">
+            <div className={mclasses.close}>
               <FaTimes
                 className={classes.exit}
                 onClick={closeModal}
                 size="40px"
               />
             </div>
-            <div className="balance simple-modal-description">
+            <div className={mclasses.balance}>
               {token ? (
                 <p>
                   {token.balance} {token.symbol}
@@ -125,7 +127,7 @@ const ModalMint = ({ token, handleMint }) => {
                 <p>Pick token first</p>
               )}
             </div>
-            <div className="max_supply2 simple-modal-description">
+            <div className={mclasses.max_supply}>
               {token && (
                 <p>
                   {token.max_supp} {token.symbol} MAX
@@ -133,7 +135,7 @@ const ModalMint = ({ token, handleMint }) => {
               )}
             </div>
 
-            <div className="input_balance simple-modal-description">
+            <div className={mclasses.input_balance}>
               <label className="labelTkn" htmlFor="balance">
                 Balance
               </label>
@@ -146,11 +148,15 @@ const ModalMint = ({ token, handleMint }) => {
                 placeholder="Balance"
                 {...register("balance", {
                   required: "this is a required",
-                  min: { value: 0.00000001, message: "Min value is 0.00000001" },
+                  min: {
+                    value: 0.00000001,
+                    message: "Min value is 0.00000001",
+                  },
                   max: {
                     value: token && token.max_supp - token.total_supp,
                     message:
-                      token && `Max value is ${token.max_supp - token.total_supp}`,
+                      token &&
+                      `Max value is ${token.max_supp - token.total_supp}`,
                   },
                   maxLength: {
                     value: 30,
@@ -163,9 +169,8 @@ const ModalMint = ({ token, handleMint }) => {
                 })}
               />
             </div>
-            <div className="error_msg simple-modal-description">
-              {
-              errors.metamask ? (
+            <div className={mclasses.error_msg}>
+              {errors.metamask ? (
                 <Link
                   rel="noopener"
                   target="_blank"
@@ -184,12 +189,10 @@ const ModalMint = ({ token, handleMint }) => {
                 errors.success && (
                   <p className="successMsg">{errors.success.message}</p>
                 )
-              )
-              
-              }
+              )}
             </div>
-            <div className="submit simple-modal-description">
-              <SubmitButton wait={isSubmitting} text="Mint" />
+            <div className={mclasses.submit}>
+              <SubmitButton wait={isSubmitting}>Mint</SubmitButton>
             </div>
           </div>
         </form>

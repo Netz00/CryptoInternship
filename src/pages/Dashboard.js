@@ -5,12 +5,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { HiOutlineLogout } from "react-icons/hi";
 
-import { withRouter, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
-import ModalTransfer from "../modals/ModalTransfer";
+import ModalTransfer from "../components/modals/ModalTransfer";
 
-import ModalMint from "../modals/ModalMint";
-import { useStoreApi } from "../../storeApi";
+import ModalMint from "../components/modals/ModalMint";
+import { useStoreApi } from "../store/storeApi";
+
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -63,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard = ({ history, handleMint, handleTransfer, changeToken }) => {
+const Dashboard = ({ handleMint, handleTransfer, changeToken }) => {
   const classes = useStyles();
   const { address, ethBalance, token, tokens } = useStoreApi();
 
@@ -78,27 +80,18 @@ const Dashboard = ({ history, handleMint, handleTransfer, changeToken }) => {
           handleTransfer={handleTransfer}
         />
         <ModalMint token={token} handleMint={handleMint} />
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.btn}
-          onClick={() => {
-            history.push("/Explore");
-          }}
-        >
-          Explore
-        </Button>
 
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.btn}
-          onClick={() => {
-            history.push("/create-token");
-          }}
-        >
-          Create new token
-        </Button>
+        <Link to="/Explore" style={{ textDecoration: "none" }}>
+          <Button variant="contained" color="secondary" className={classes.btn}>
+            Explore
+          </Button>
+        </Link>
+
+        <Link to="/create-token" style={{ textDecoration: "none" }}>
+          <Button variant="contained" color="secondary" className={classes.btn}>
+            Create new token
+          </Button>
+        </Link>
 
         <form action="/" className={classes.form}>
           <button type="submit" className={classes.submit}>
@@ -159,4 +152,4 @@ Dashboard.propTypes = {
   address: PropTypes.string,
 };
 
-export default withRouter(Dashboard);
+export default Dashboard;

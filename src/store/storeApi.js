@@ -9,10 +9,12 @@ export const useStoreApi = () => {
     message: state.message,
     token:state.token,
     tokens:state.tokens,
-    setAddress: newAddress => {
+    setAccount: (newAddress, newBalance, newTokens) => {
       dispatch({
-        type: "NEW-ADDRESS",
+        type: "NEW-ACCOUNT",
         address: newAddress,
+        balance: newBalance,
+        tokens: newTokens,
         message: "New address added successfully!"
       });
     },

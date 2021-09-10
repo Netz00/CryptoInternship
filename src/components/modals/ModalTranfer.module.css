@@ -1,0 +1,89 @@
+
+/*MODAL_TRANFER*/
+
+.container {
+    display: inline-grid;
+    grid-template-columns: 400px 60px;
+    grid-template-rows: 70px 50px 120px 90px 36px 50px;
+    grid-auto-columns: 1fr;
+    grid-auto-rows: 1fr;
+    gap: 10px 0px;
+    grid-auto-flow: row;
+    justify-content: center;
+    align-content: space-around;
+    grid-template-areas:
+      "Transfer B"
+      "balance ."
+      "address address"
+      "balanceToSend balanceToSend"
+      "msg msg"
+      "SumbmitButton SumbmitButton";
+  
+    width: 490px;
+    height: auto;
+  
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  
+    max-width: 500px;
+    margin: 0 auto;
+    margin: 0 auto;
+    border-radius: 10px;
+  
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  
+    color: aliceblue;
+    background: #292323;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+      "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+      sans-serif;
+  
+    border-radius: 10px;
+  }
+  
+  .Transfer {
+    justify-self: center;
+    align-self: end;
+    grid-area: Transfer;
+  }
+  
+  .B {
+    justify-self: center;
+    align-self: end;
+    grid-area: B;
+  }
+  
+  .balance {
+    justify-self: center;
+    grid-area: balance;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .address {
+    min-width: 380px;
+    justify-self: center;
+    grid-area: address;
+  }
+  
+  .balanceToSend {
+    justify-self: center;
+    grid-area: balanceToSend;
+  }
+   
+  .msg {
+    justify-self: center;
+    grid-area: msg;
+  }
+  
+  .SumbmitButton {
+    justify-self: end;
+    grid-area: SumbmitButton;
+  }
+ 
